@@ -48,7 +48,7 @@ Use this skill when:
 - **DDL NOT NULL**: All DDL fields must have NOT NULL constraint, code must not check IS NULL/IS NOT NULL
 
 ### 3. Logging Standards
-- **Global unified logger**: Use `logger.G()` instance
+- **Global unified logger**: MUST use wrapped logger instance (e.g., `logger.G()`, `logger.L()`, etc.), NEVER use raw `fmt.Println`, `log.Println` or similar. Multiple logger instances are allowed, naming is flexible as long as semantically appropriate
 - **Language**: Use English for logs, clear and understandable
 - **Security**: Do not print sensitive fields (token, access key, secret key, etc.)
 - **Level**: Reasonably use Info, Warn, Error levels
@@ -96,7 +96,7 @@ Use this skill when:
 - [ ] No index/uniqueIndex tags in gorm struct
 - [ ] DDL fields all have NOT NULL constraint
 - [ ] Do not print sensitive information
-- [ ] Use English logs with unified logger instance
+- [ ] Use English logs with wrapped logger instance (NEVER use `fmt.Println`, `log.Println`, etc.)
 - [ ] Use structured logging (`Infow`, `Warnw`, `Errorw`, `Debugw`)
 - [ ] Log keys use snake_case naming
 - [ ] No `fmt.Sprintf` or string concatenation in log messages
