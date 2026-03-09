@@ -1,0 +1,207 @@
+---
+name: code-standards
+description: This skill provides comprehensive coding standards for the EigenFlow project, covering both backend (Go) and frontend (Vue 3 + TypeScript). Use this skill when writing, reviewing, or refactoring code to ensure consistency, maintainability, and adherence to best practices. The skill emphasizes separation of concerns where backend handles all business logic and calculations, while frontend focuses solely on presentation.
+---
+
+# EigenFlow Code Standards
+
+## Overview
+
+This skill provides comprehensive coding standards for the EigenFlow project, covering both backend (Go) and frontend (Vue 3 + TypeScript) development. These standards ensure consistency, maintainability, and adherence to best practices.
+
+## When to Use This Skill
+
+Use this skill when:
+- Writing new code (backend or frontend)
+- Refactoring existing code
+- Reviewing pull requests
+- Fixing code quality issues
+- Setting up database models (backend)
+- Implementing DDD architecture layers (backend)
+- Creating Vue components (frontend)
+- Managing application state (frontend)
+
+## Core Principles
+
+### Separation of Concerns
+- **Backend**: Handles ALL business logic, calculations, and data aggregation
+- **Frontend**: ONLY handles presentation, receives pre-calculated data from backend
+- **No Business Logic in Frontend**: Frontend should never perform complex calculations
+- **Backend Trust**: Frontend trusts backend to provide all necessary data in ready-to-display format
+
+---
+
+## Backend Standards (Go)
+
+### 1. Naming and Formatting
+- **Interface data**: Use camelCase naming
+- **Comments**: Use English, follow Google conventions
+- **Package names**: Use lowercase letters, avoid underscores
+- **Function names**: Use camelCase, start with a verb
+
+### 2. Database Field Standards
+- **gorm tag**: Must be explicit, every field must have `gorm:"column:field_name"`
+- **Database field naming**: Use snake_case naming
+- **gorm tag restrictions**: Only write column fields, do not use gorm's index, uniqueIndex features
+- **DDL definition**: Create table definitions must explicitly write DDL, cannot use gorm's AutoMigrate feature
+- **DDL principle**: What you see is what you get, table structure is clearly defined by DDL
+- **DDL NOT NULL**: All DDL fields must have NOT NULL constraint, code must not check IS NULL/IS NOT NULL
+
+### 3. Logging Standards
+- **Global unified logger**: Use `logger.G()` instance
+- **Language**: Use English for logs, clear and understandable
+- **Security**: Do not print sensitive fields (token, access key, secret key, etc.)
+- **Level**: Reasonably use Info, Warn, Error levels
+
+### 4. Timestamp Handling
+- **Database storage**: Unified use of int64 timestamps (UnixMilli)
+- **Frontend-backend transmission**: Use int64 timestamps
+- **Frontend display**: Frontend responsible for converting to local time, displaying year-month-day hour:minute:second
+
+### 5. DDD Architecture Standards
+- **Layered structure**: Strictly follow Domain-Driven Design layering
+- **Dependency direction**: Outer layers depend on inner layers, inner layers do not depend on outer layers
+- **Domain model**: Business logic concentrated in the domain layer
+- **Infrastructure**: External dependencies abstracted through interfaces
+
+### 6. Code Quality Standards
+- **Compilation check**: Every modification must ensure code compiles successfully
+- **Linter check**: Code style must pass revive lint check (https://github.com/mgechev/revive)
+- **Fix priority**: Compilation errors and lint errors must be fixed first
+- **Avoid duplication**: Eliminate duplicate code, extract common logic into reusable functions or modules
+- **Avoid magic values**: Prohibit using magic numbers and magic strings, define them as meaningful constants
+
+### 7. Error Handling Standards
+- **Multiple return values**: When a function returns multiple values including error, if error is not nil, other return values must be zero values
+- **Success case**: When error is nil, other return values must be valid non-zero values
+- **Consistency**: Always follow this pattern for all functions returning error
+
+### 8. Business Logic Placement
+- **All calculations**: Must be performed in the backend
+- **Data aggregation**: Must be done in the backend before sending to frontend
+- **Complex computations**: Must be handled by backend services
+- **Frontend responsibility**: Only receive and display pre-calculated data
+
+### 9. Goroutine Safety Standards
+- **PROHIBITED**: Never use the `go` keyword directly to start a goroutine
+- **REQUIRED**: Always use `goroutine.SafeGo` or `goroutine.SafeGoWithContext` to start goroutines
+- **Panic Recovery**: SafeGo provides automatic panic recovery with stack trace logging
+- **Stack Trace**: Panic stack traces are limited to 65536 bytes (2^16) to prevent excessive log output
+- **Context Propagation**: Use `SafeGoWithContext` when context propagation is needed
+
+## Backend Checklist
+
+- [ ] Interface fields use camelCase
+- [ ] All fields have explicit `gorm:"column:field_name"` tag
+- [ ] No index/uniqueIndex tags in gorm struct
+- [ ] DDL fields all have NOT NULL constraint
+- [ ] Do not print sensitive information
+- [ ] Use English logs with unified logger instance
+- [ ] Use structured logging (`Infow`, `Warnw`, `Errorw`, `Debugw`)
+- [ ] Log keys use snake_case naming
+- [ ] No `fmt.Sprintf` or string concatenation in log messages
+- [ ] Database fields use int64 timestamps
+- [ ] API responses use int64 timestamps
+- [ ] Business logic in domain layer
+- [ ] No duplicate code blocks
+- [ ] No magic numbers and magic strings
+- [ ] Compiles successfully and passes lint
+- [ ] Functions returning error follow zero-value pattern
+- [ ] All calculations are performed in backend
+- [ ] Data is aggregated before sending to frontend
+- [ ] No direct `go` keyword usage, use `goroutine.SafeGo` or `goroutine.SafeGoWithContext`
+
+---
+
+## Frontend Standards (Vue 3 + TypeScript)
+
+### 1. Single Responsibility Principle
+- **Presentation Only**: Frontend is ONLY responsible for displaying data
+- **No Business Logic**: Never implement business calculations in frontend
+- **No Data Aggregation**: Never aggregate or transform complex data in frontend
+- **Backend Trust**: Trust backend to provide all necessary pre-calculated data
+
+### 2. Data Display Standards
+- **Timestamps**: 
+  - Receive int64 timestamps from backend
+  - Use utility functions to format to local time
+  - Display format: YYYY-MM-DD HH:mm:ss or contextual formats
+- **Numbers**: 
+  - Use backend-provided formatted values when available
+  - Simple formatting only (e.g., decimal places, currency symbols)
+  - No complex calculations
+- **Data Transformation**: 
+  - Only simple transformations (sorting, filtering by existing fields)
+  - No data aggregation or statistical calculations
+  - No derived data calculations
+
+### 3. Component Structure
+- **Vue 3 Composition API**: Use `<script setup>` syntax
+- **TypeScript**: All code must be strongly typed
+- **Props Validation**: Define prop types explicitly
+- **Event Naming**: Use kebab-case for custom events
+- **Component Naming**: Use PascalCase for component files
+
+### 4. State Management
+- **Pinia**: Use Pinia for global state management
+- **Local State**: Use `ref` and `reactive` for component-local state
+- **No Business Logic in Stores**: Stores should only manage UI state, not business calculations
+
+### 5. API Integration
+- **Request Handling**: Use centralized API modules
+- **Error Handling**: Display user-friendly error messages
+- **Loading States**: Always show loading indicators during async operations
+- **No Data Manipulation**: Use data as received from backend
+
+### 6. Code Quality Standards
+- **TypeScript strict mode**: Enable strict type checking
+- **ESLint**: Follow Vue and TypeScript best practices
+- **No `any` type**: Avoid using `any`, define proper types
+- **Consistent Formatting**: Use Prettier for code formatting
+
+### 7. Performance Standards
+- **Lazy Loading**: Use dynamic imports for large components
+- **Computed Properties**: Use for simple derived values (no complex calculations)
+- **Watchers**: Avoid deep watchers when possible
+- **No Heavy Computations**: Move all heavy calculations to backend
+
+### 8. UI/UX Standards
+- **Responsive Design**: Support desktop and mobile devices
+- **Accessibility**: Follow WCAG guidelines
+- **Loading States**: Show loading indicators for async operations
+- **Error States**: Handle and display errors gracefully
+- **Empty States**: Show appropriate messages when no data available
+
+## Frontend Checklist
+
+- [ ] No business logic implemented in frontend
+- [ ] No complex calculations in frontend
+- [ ] No data aggregation in frontend
+- [ ] Timestamps formatted using utility functions
+- [ ] Numbers displayed with simple formatting only
+- [ ] Using Vue 3 Composition API with `<script setup>`
+- [ ] TypeScript types defined for all props and data
+- [ ] Pinia used for global state only
+- [ ] No business logic in stores
+- [ ] Centralized API modules used
+- [ ] Loading indicators implemented
+- [ ] TypeScript strict mode enabled
+- [ ] No `any` types used
+- [ ] Responsive design implemented
+
+---
+
+## Examples
+
+See `references/code_examples.md` for detailed examples demonstrating correct and incorrect patterns for both backend and frontend code.
+
+## Resources
+
+### Backend Resources
+- [Effective Go](https://golang.org/doc/effective_go)
+- [Go Code Review Comments](https://github.com/golang/go/wiki/CodeReviewComments)
+
+### Frontend Resources
+- [Vue 3 Documentation](https://vuejs.org/guide/introduction.html)
+- [TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/)
+- [Pinia Documentation](https://pinia.vuejs.org/)
