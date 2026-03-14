@@ -97,6 +97,17 @@ Use this skill when:
 - **Stack Trace**: Panic stack traces are limited to 65536 bytes (2^16) to prevent excessive log output
 - **Context Propagation**: Use `SafeGoWithContext` when context propagation is needed
 
+### 10. Comment Standards
+- **Consistency**: Comments must accurately describe what the code does, never contradict the actual implementation
+- **Keep Updated**: When modifying code, always update related comments immediately
+- **No Outdated Comments**: Remove or update comments that no longer reflect the current code behavior
+- **No Misleading Comments**: Comments should not describe functionality that doesn't exist or has been removed
+- **Self-Documenting Code**: Prefer clear naming over comments when possible
+- **Comment Purpose**: Explain "why" not "what" - the code itself shows what it does
+- **Function Comments**: Public functions must have documentation comments explaining purpose and usage
+- **Complex Logic**: Add comments for complex algorithms or non-obvious business rules
+- **TODO Management**: TODO comments must include issue tracker reference and be actively tracked
+
 ## Backend Checklist
 
 - [ ] Interface fields use camelCase
@@ -120,6 +131,9 @@ Use this skill when:
 - [ ] No direct `go` keyword usage, use `goroutine.SafeGo` or `goroutine.SafeGoWithContext`
 - [ ] No mock data or placeholder implementations
 - [ ] No TODO/FIXME placeholders in production code
+- [ ] Comments accurately describe current code behavior
+- [ ] No outdated or misleading comments
+- [ ] Public functions have documentation comments
 
 ---
 
@@ -182,6 +196,16 @@ Use this skill when:
 - **Error States**: Handle and display errors gracefully
 - **Empty States**: Show appropriate messages when no data available
 
+### 9. Comment Standards
+- **Consistency**: Comments must accurately describe what the code does, never contradict the actual implementation
+- **Keep Updated**: When modifying code, always update related comments immediately
+- **No Outdated Comments**: Remove or update comments that no longer reflect the current code behavior
+- **No Misleading Comments**: Comments should not describe functionality that doesn't exist or has been removed
+- **JSDoc for Public APIs**: Use JSDoc comments for exported functions, components, and types
+- **Component Documentation**: Complex components should have comments explaining props and usage
+- **Explain Why**: Comments should explain business decisions or non-obvious logic, not restate code
+- **TODO Management**: TODO comments must include issue tracker reference and be actively tracked
+
 ## Frontend Checklist
 
 - [ ] No business logic implemented in frontend
@@ -200,6 +224,9 @@ Use this skill when:
 - [ ] Responsive design implemented
 - [ ] No mock data or placeholder implementations
 - [ ] No TODO/FIXME placeholders in production code
+- [ ] Comments accurately describe current code behavior
+- [ ] No outdated or misleading comments
+- [ ] JSDoc comments for exported functions and components
 
 ---
 
