@@ -29,6 +29,14 @@ Use this skill when:
 - **No Business Logic in Frontend**: Frontend should never perform complex calculations
 - **Backend Trust**: Frontend trusts backend to provide all necessary data in ready-to-display format
 
+### Production-Grade Code
+- **No Mock Data**: Never use mock data, mock functions, or placeholder implementations in production code
+- **No Stub Functions**: All functions must have complete, working implementations
+- **No TODO Placeholders**: No "TODO", "FIXME", or placeholder code that defers implementation
+- **No Temporary Solutions**: Every piece of code must be production-ready, not a quick fix or workaround
+- **Complete Implementation**: All features must be fully implemented with proper error handling
+- **Testable Code**: Code must be written with testing in mind, but test mocks are only allowed in test files
+
 ---
 
 ## Backend Standards (Go)
@@ -110,6 +118,8 @@ Use this skill when:
 - [ ] All calculations are performed in backend
 - [ ] Data is aggregated before sending to frontend
 - [ ] No direct `go` keyword usage, use `goroutine.SafeGo` or `goroutine.SafeGoWithContext`
+- [ ] No mock data or placeholder implementations
+- [ ] No TODO/FIXME placeholders in production code
 
 ---
 
@@ -188,6 +198,8 @@ Use this skill when:
 - [ ] TypeScript strict mode enabled
 - [ ] No `any` types used
 - [ ] Responsive design implemented
+- [ ] No mock data or placeholder implementations
+- [ ] No TODO/FIXME placeholders in production code
 
 ---
 
