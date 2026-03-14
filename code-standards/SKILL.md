@@ -108,6 +108,16 @@ Use this skill when:
 - **Complex Logic**: Add comments for complex algorithms or non-obvious business rules
 - **TODO Management**: TODO comments must include issue tracker reference and be actively tracked
 
+### 11. Test Synchronization Standards
+- **Sync with Code Changes**: When modifying code, corresponding test cases MUST be updated simultaneously
+- **New Features**: New functionality requires new test cases before merge
+- **Bug Fixes**: Bug fixes must include regression test cases
+- **Refactoring**: Refactored code must update existing tests to match new structure
+- **API Changes**: Interface changes require updating integration tests
+- **No Orphaned Tests**: Remove tests for deleted code, update tests for modified code
+- **Test Coverage**: Maintain or improve test coverage with each change
+- **Test First**: For bug fixes, write failing test case first, then fix the code
+
 ## Backend Checklist
 
 - [ ] Interface fields use camelCase
@@ -134,6 +144,9 @@ Use this skill when:
 - [ ] Comments accurately describe current code behavior
 - [ ] No outdated or misleading comments
 - [ ] Public functions have documentation comments
+- [ ] Test cases updated when code changes
+- [ ] New features have corresponding test cases
+- [ ] Bug fixes include regression tests
 
 ---
 
@@ -206,6 +219,16 @@ Use this skill when:
 - **Explain Why**: Comments should explain business decisions or non-obvious logic, not restate code
 - **TODO Management**: TODO comments must include issue tracker reference and be actively tracked
 
+### 10. Test Synchronization Standards
+- **Sync with Code Changes**: When modifying code, corresponding test cases MUST be updated simultaneously
+- **New Features**: New components or functions require corresponding test cases
+- **Bug Fixes**: Bug fixes must include regression test cases
+- **Refactoring**: Refactored components must update existing tests
+- **Component Tests**: Update component tests when props, events, or behavior change
+- **E2E Tests**: Update E2E tests when user flows or UI structure change
+- **No Orphaned Tests**: Remove tests for deleted components, update tests for modified ones
+- **Test Coverage**: Maintain or improve test coverage with each change
+
 ## Frontend Checklist
 
 - [ ] No business logic implemented in frontend
@@ -227,6 +250,9 @@ Use this skill when:
 - [ ] Comments accurately describe current code behavior
 - [ ] No outdated or misleading comments
 - [ ] JSDoc comments for exported functions and components
+- [ ] Test cases updated when code changes
+- [ ] New components/functions have corresponding test cases
+- [ ] Bug fixes include regression tests
 
 ---
 
