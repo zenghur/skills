@@ -83,6 +83,10 @@ Use this skill when:
 - **Multiple return values**: When a function returns multiple values including error, if error is not nil, other return values must be zero values
 - **Success case**: When error is nil, other return values must be valid non-zero values
 - **Consistency**: Always follow this pattern for all functions returning error
+- **Error Comparison**: Use `errors.Is()` for error value comparison, NEVER use `==` for comparing errors
+- **Error Type Assertion**: Use `errors.As()` for error type assertion, NEVER use type assertion directly
+- **Error Wrapping**: Use `fmt.Errorf("context: %w", err)` to wrap errors with context
+- **Unwrap Chain**: `errors.Is()` and `errors.As()` traverse the error chain automatically
 
 ### 8. Business Logic Placement
 - **All calculations**: Must be performed in the backend
@@ -145,6 +149,8 @@ Use this skill when:
 - [ ] No magic numbers and magic strings
 - [ ] Compiles successfully and passes lint
 - [ ] Functions returning error follow zero-value pattern
+- [ ] Use `errors.Is()` for error comparison (NEVER use `==`)
+- [ ] Use `errors.As()` for error type assertion
 - [ ] All calculations are performed in backend
 - [ ] Data is aggregated before sending to frontend
 - [ ] No direct `go` keyword usage, use `goroutine.SafeGo` or `goroutine.SafeGoWithContext`
