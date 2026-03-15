@@ -118,6 +118,15 @@ Use this skill when:
 - **Test Coverage**: Maintain or improve test coverage with each change
 - **Test First**: For bug fixes, write failing test case first, then fix the code
 
+### 12. Guard Clause Standards
+- **Handle Exceptions First**: Check and handle exceptional cases before normal logic
+- **Invert Conditions**: Use inverted conditions to return early, avoid deep nesting
+- **Flat Code Structure**: Reduce nesting levels, keep code flat and readable
+- **Early Return**: Return as soon as possible when conditions are not met
+- **Readability**: Guard clauses make the main logic more visible and easier to understand
+- **Pattern**: `if err != nil { return }` before proceeding with normal logic
+- **Avoid Else**: Prefer early return over else branches when possible
+
 ## Backend Checklist
 
 - [ ] Interface fields use camelCase
@@ -147,6 +156,9 @@ Use this skill when:
 - [ ] Test cases updated when code changes
 - [ ] New features have corresponding test cases
 - [ ] Bug fixes include regression tests
+- [ ] Guard clauses used to handle exceptions first
+- [ ] Early returns reduce nesting levels
+- [ ] Code structure is flat and readable
 
 ---
 
@@ -229,6 +241,15 @@ Use this skill when:
 - **No Orphaned Tests**: Remove tests for deleted components, update tests for modified ones
 - **Test Coverage**: Maintain or improve test coverage with each change
 
+### 11. Guard Clause Standards
+- **Handle Exceptions First**: Check and handle exceptional cases before normal logic
+- **Invert Conditions**: Use inverted conditions to return early, avoid deep nesting
+- **Flat Code Structure**: Reduce nesting levels, keep code flat and readable
+- **Early Return**: Return as soon as possible when conditions are not met
+- **Readability**: Guard clauses make the main logic more visible and easier to understand
+- **Pattern**: Check invalid props/state first, return early or show fallback UI
+- **Avoid Else**: Prefer early return over else branches when possible
+
 ## Frontend Checklist
 
 - [ ] No business logic implemented in frontend
@@ -253,6 +274,9 @@ Use this skill when:
 - [ ] Test cases updated when code changes
 - [ ] New components/functions have corresponding test cases
 - [ ] Bug fixes include regression tests
+- [ ] Guard clauses used to handle exceptions first
+- [ ] Early returns reduce nesting levels
+- [ ] Code structure is flat and readable
 
 ---
 
