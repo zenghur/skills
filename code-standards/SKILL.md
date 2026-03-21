@@ -87,6 +87,10 @@ Use this skill when:
 - **Performance**: Struct access is faster than map lookup, no runtime hash computation needed
 - **IDE Support**: Structs enable IDE autocomplete and refactoring tools
 - **Documentation**: Struct fields are self-documenting with clear names and types
+- **Early Initialization**: Initialize dependencies at startup, avoid redundant nil checks
+- **No Defensive Nil Checks**: Only check for nil when the value can legitimately be nil (optional dependencies, failed initialization)
+- **Trust Initialization**: If a dependency is initialized at startup, trust it exists throughout the lifecycle
+- **Fail Fast**: If initialization fails, fail immediately rather than checking nil everywhere
 
 ### 7. Error Handling Standards
 - **Multiple return values**: When a function returns multiple values including error, if error is not nil, other return values must be zero values
@@ -158,6 +162,8 @@ Use this skill when:
 - [ ] No duplicate code blocks
 - [ ] No magic numbers and magic strings
 - [ ] Prefer struct over map[string]interface{} for known fields
+- [ ] No redundant nil checks for initialized dependencies
+- [ ] Dependencies initialized at startup, not checked repeatedly
 - [ ] Compiles successfully and passes lint
 - [ ] Functions returning error follow zero-value pattern
 - [ ] Use `errors.Is()` for error comparison (NEVER use `==`)
