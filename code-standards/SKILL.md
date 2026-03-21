@@ -54,6 +54,10 @@ Use this skill when:
 - **DDL definition**: Create table definitions must explicitly write DDL, cannot use gorm's AutoMigrate feature
 - **DDL principle**: What you see is what you get, table structure is clearly defined by DDL
 - **DDL NOT NULL**: All DDL fields must have NOT NULL constraint, code must not check IS NULL/IS NOT NULL
+- **Update with Model**: When updating database records, use struct model instead of map[string]interface{}
+- **Type Safety**: Model-based updates provide compile-time type checking
+- **Field Tracking**: Model updates only modify non-zero fields, avoiding accidental zero-value overwrites
+- **IDE Support**: Struct fields enable autocomplete and refactoring
 
 ### 3. Logging Standards
 - **Global unified logger**: MUST use wrapped logger instance (e.g., `logger.G()`, `logger.L()`, etc.), NEVER use raw `fmt.Println`, `log.Println` or similar. Multiple logger instances are allowed, naming is flexible as long as semantically appropriate
@@ -142,6 +146,7 @@ Use this skill when:
 - [ ] All fields have explicit `gorm:"column:field_name"` tag
 - [ ] No index/uniqueIndex tags in gorm struct
 - [ ] DDL fields all have NOT NULL constraint
+- [ ] Use struct model for gorm updates, not map[string]interface{}
 - [ ] Do not print sensitive information
 - [ ] Use English logs with wrapped logger instance (NEVER use `fmt.Println`, `log.Println`, etc.)
 - [ ] Use structured logging (`Infow`, `Warnw`, `Errorw`, `Debugw`)
