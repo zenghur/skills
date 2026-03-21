@@ -58,6 +58,11 @@ Use this skill when:
 - **Type Safety**: Model-based updates provide compile-time type checking
 - **Field Tracking**: Model updates only modify non-zero fields, avoiding accidental zero-value overwrites
 - **IDE Support**: Struct fields enable autocomplete and refactoring
+- **No Raw SQL for CRUD**: Use gorm model methods for INSERT/UPDATE/DELETE operations, avoid writing raw SQL
+- **Model Methods**: Use `db.Create()`, `db.Save()`, `db.Updates()`, `db.Delete()` instead of raw SQL
+- **Query Allowed**: Raw SQL is allowed for complex queries that gorm cannot express easily
+- **DDL Exception**: Raw SQL is allowed for DDL operations (CREATE TABLE, ALTER TABLE, etc.)
+- **Type Safety**: Model methods provide compile-time type checking and IDE support
 
 ### 3. Logging Standards
 - **Global unified logger**: MUST use wrapped logger instance (e.g., `logger.G()`, `logger.L()`, etc.), NEVER use raw `fmt.Println`, `log.Println` or similar. Multiple logger instances are allowed, naming is flexible as long as semantically appropriate
@@ -151,6 +156,7 @@ Use this skill when:
 - [ ] No index/uniqueIndex tags in gorm struct
 - [ ] DDL fields all have NOT NULL constraint
 - [ ] Use struct model for gorm updates, not map[string]interface{}
+- [ ] No raw SQL for CRUD operations, use gorm model methods
 - [ ] Do not print sensitive information
 - [ ] Use English logs with wrapped logger instance (NEVER use `fmt.Println`, `log.Println`, etc.)
 - [ ] Use structured logging (`Infow`, `Warnw`, `Errorw`, `Debugw`)
