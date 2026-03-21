@@ -78,6 +78,11 @@ Use this skill when:
 - **Fix priority**: Compilation errors and lint errors must be fixed first
 - **Avoid duplication**: Eliminate duplicate code, extract common logic into reusable functions or modules
 - **Avoid magic values**: Prohibit using magic numbers and magic strings, define them as meaningful constants
+- **Prefer struct over map**: Use struct instead of map[string]interface{} when field types are known at compile time
+- **Type Safety**: Structs provide compile-time type checking, map does not
+- **Performance**: Struct access is faster than map lookup, no runtime hash computation needed
+- **IDE Support**: Structs enable IDE autocomplete and refactoring tools
+- **Documentation**: Struct fields are self-documenting with clear names and types
 
 ### 7. Error Handling Standards
 - **Multiple return values**: When a function returns multiple values including error, if error is not nil, other return values must be zero values
@@ -147,6 +152,7 @@ Use this skill when:
 - [ ] Business logic in domain layer
 - [ ] No duplicate code blocks
 - [ ] No magic numbers and magic strings
+- [ ] Prefer struct over map[string]interface{} for known fields
 - [ ] Compiles successfully and passes lint
 - [ ] Functions returning error follow zero-value pattern
 - [ ] Use `errors.Is()` for error comparison (NEVER use `==`)
