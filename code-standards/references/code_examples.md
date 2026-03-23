@@ -270,7 +270,7 @@ type Trade struct {
 ### Error 3: Violating DDD Dependency Rules
 ```go
 // Incorrect: Domain layer depending on infrastructure
-import "github.com/zenghur/EigenFlow/internal/infrastructure/persistence"
+import "github.com/your-org/your-project/internal/infrastructure/persistence"
 
 type Order struct {
     // Domain objects should not directly depend on infrastructure

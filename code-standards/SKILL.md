@@ -1,13 +1,13 @@
 ---
 name: code-standards
-description: This skill provides comprehensive coding standards for the EigenFlow project, covering both backend (Go) and frontend (Vue 3 + TypeScript). Use this skill when writing, reviewing, or refactoring code to ensure consistency, maintainability, and adherence to best practices. The skill emphasizes separation of concerns where backend handles all business logic and calculations, while frontend focuses solely on presentation.
+description: This skill provides comprehensive coding standards for Go backend and Vue 3 + TypeScript frontend projects. Use this skill when writing, reviewing, or refactoring code to ensure consistency, maintainability, and adherence to best practices. The skill emphasizes separation of concerns where backend handles all business logic and calculations, while frontend focuses solely on presentation.
 ---
 
-# EigenFlow Code Standards
+# Code Standards
 
 ## Overview
 
-This skill provides comprehensive coding standards for the EigenFlow project, covering both backend (Go) and frontend (Vue 3 + TypeScript) development. These standards ensure consistency, maintainability, and adherence to best practices.
+This skill provides comprehensive coding standards for Go backend and Vue 3 + TypeScript frontend development. These standards ensure consistency, maintainability, and adherence to best practices.
 
 ## When to Use This Skill
 
