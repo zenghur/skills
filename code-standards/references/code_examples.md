@@ -10,7 +10,7 @@ The project uses structured logging with key-value pairs. Always use `Infow`, `W
 
 #### Correct Structured Logging
 ```go
-// Correct: Use key-value pairs with snake_case keys
+// Correct: Use key-value pairs with camelCase keys
 logger.G().Infow("Order executed", 
     "symbol", order.Symbol,
     "side", order.Side,
@@ -20,7 +20,7 @@ logger.G().Infow("Order executed",
 
 // Correct: Error logging with context
 logger.G().Errorw("Failed to process order",
-    "order_id", order.ID,
+    "orderId", order.ID,
     "symbol", order.Symbol,
     "error", err,
 )
@@ -31,6 +31,10 @@ logger.G().Infow("WebSocket connected")
 // Correct: Duration and timing
 logger.G().Infow("Cycle completed", "duration", time.Since(start))
 e.logger.Infow("Position closed", "symbol", symbol, "pnl", pnl, "reason", reason)
+
+// Correct: Using InfoW series functions (recommended)
+logger.G().InfoW("Order executed", "symbol", order.Symbol, "side", order.Side, "price", order.Price)
+logger.G().ErrorW("Failed to process order", "orderId", order.ID, "symbol", order.Symbol, "error", err)
 ```
 
 #### Incorrect Structured Logging (DO NOT DO THIS)
@@ -44,8 +48,8 @@ logger.G().Infow("Position closed: " + symbol + " PnL: " + fmt.Sprintf("%.2f", p
 // WRONG: Using fmt.Sprintf
 logger.G().Errorw(fmt.Sprintf("Failed to process order %s: %v", order.ID, err))
 
-// WRONG: Not using snake_case for keys
-logger.G().Infow("Order executed", "orderID", order.ID, "orderSymbol", order.Symbol)
+// WRONG: Not using camelCase for keys
+logger.G().Infow("Order executed", "order_id", order.ID, "order_symbol", order.Symbol)
 
 // WRONG: Using old format methods (these methods no longer exist)
 logger.G().Infof("Order executed: %s", order.Symbol)  // Method removed!
@@ -55,20 +59,20 @@ logger.G().Info("WebSocket connected")                // Method removed!
 ### Security in Logging
 ```go
 // Correct: Use English, do not print sensitive information
-logger.G().Infow("User authenticated", "user_id", user.ID)
+logger.G().Infow("User authenticated", "userId", user.ID)
 logger.G().Warnw("Database connection timeout", "attempt", retryCount)
-logger.G().Errorw("Failed to process order", "order_id", order.ID, "error", err)
+logger.G().Errorw("Failed to process order", "orderId", order.ID, "error", err)
 
 // Incorrect: Printing sensitive information
-logger.G().Infow("API key loaded", "api_key", apiKey) // Prohibited!
+logger.G().Infow("API key loaded", "apiKey", apiKey) // Prohibited!
 logger.G().Infow("User credentials", "password", password) // Prohibited!
 ```
 
 ### Key Naming Reference Table
 | Context | Correct Key | Incorrect Key |
 |---------|-------------|---------------|
-| Order ID | `order_id` | `orderId`, `OrderID` |
-| User ID | `user_id` | `userId`, `UserID` |
+| Order ID | `orderId` | `order_id`, `OrderID` |
+| User ID | `userId` | `user_id`, `UserID` |
 | Symbol | `symbol` | `Symbol` |
 | Price | `price` | `Price` |
 | Error | `error` | `err`, `Error` |
@@ -77,6 +81,8 @@ logger.G().Infow("User credentials", "password", password) // Prohibited!
 | Status | `status` | `Status` |
 | Balance | `balance` | `Balance` |
 | PnL | `pnl` | `PnL`, `profit_loss` |
+| API Key | `apiKey` | `api_key`, `APIKey` |
+| Order Symbol | `orderSymbol` | `order_symbol`, `OrderSymbol` |
 
 ## 2. Timestamp Handling Examples
 

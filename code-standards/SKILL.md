@@ -159,8 +159,8 @@ Use this skill when:
 - [ ] No raw SQL for CRUD operations, use gorm model methods
 - [ ] Do not print sensitive information
 - [ ] Use English logs with wrapped logger instance (NEVER use `fmt.Println`, `log.Println`, etc.)
-- [ ] Use structured logging (`Infow`, `Warnw`, `Errorw`, `Debugw`)
-- [ ] Log keys use snake_case naming
+- [ ] Use structured logging (`Infow`, `Warnw`, `Errorw`, `Debugw` or `InfoW`, `WarnW`, `ErrorW`, `DebugW`)
+- [ ] Log keys use camelCase naming
 - [ ] No `fmt.Sprintf` or string concatenation in log messages
 - [ ] Database fields use int64 timestamps
 - [ ] API responses use int64 timestamps
