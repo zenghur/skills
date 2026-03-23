@@ -54,6 +54,15 @@ Use this skill when:
 - **DDL definition**: Create table definitions must explicitly write DDL, cannot use gorm's AutoMigrate feature
 - **DDL principle**: What you see is what you get, table structure is clearly defined by DDL
 - **DDL NOT NULL**: All DDL fields must have NOT NULL constraint, code must not check IS NULL/IS NOT NULL
+- **Update with Model**: When updating database records, use struct model instead of map[string]interface{}
+- **Type Safety**: Model-based updates provide compile-time type checking
+- **Field Tracking**: Model updates only modify non-zero fields, avoiding accidental zero-value overwrites
+- **IDE Support**: Struct fields enable autocomplete and refactoring
+- **No Raw SQL for CRUD**: Use gorm model methods for INSERT/UPDATE/DELETE operations, avoid writing raw SQL
+- **Model Methods**: Use `db.Create()`, `db.Save()`, `db.Updates()`, `db.Delete()` instead of raw SQL
+- **Query Allowed**: Raw SQL is allowed for complex queries that gorm cannot express easily
+- **DDL Exception**: Raw SQL is allowed for DDL operations (CREATE TABLE, ALTER TABLE, etc.)
+- **Type Safety**: Model methods provide compile-time type checking and IDE support
 
 ### 3. Logging Standards
 - **Global unified logger**: MUST use wrapped logger instance (e.g., `logger.G()`, `logger.L()`, etc.), NEVER use raw `fmt.Println`, `log.Println` or similar. Multiple logger instances are allowed, naming is flexible as long as semantically appropriate
@@ -78,6 +87,15 @@ Use this skill when:
 - **Fix priority**: Compilation errors and lint errors must be fixed first
 - **Avoid duplication**: Eliminate duplicate code, extract common logic into reusable functions or modules
 - **Avoid magic values**: Prohibit using magic numbers and magic strings, define them as meaningful constants
+- **Prefer struct over map**: Use struct instead of map[string]interface{} when field types are known at compile time
+- **Type Safety**: Structs provide compile-time type checking, map does not
+- **Performance**: Struct access is faster than map lookup, no runtime hash computation needed
+- **IDE Support**: Structs enable IDE autocomplete and refactoring tools
+- **Documentation**: Struct fields are self-documenting with clear names and types
+- **Early Initialization**: Initialize dependencies at startup, avoid redundant nil checks
+- **No Defensive Nil Checks**: Only check for nil when the value can legitimately be nil (optional dependencies, failed initialization)
+- **Trust Initialization**: If a dependency is initialized at startup, trust it exists throughout the lifecycle
+- **Fail Fast**: If initialization fails, fail immediately rather than checking nil everywhere
 
 ### 7. Error Handling Standards
 - **Multiple return values**: When a function returns multiple values including error, if error is not nil, other return values must be zero values
@@ -137,6 +155,8 @@ Use this skill when:
 - [ ] All fields have explicit `gorm:"column:field_name"` tag
 - [ ] No index/uniqueIndex tags in gorm struct
 - [ ] DDL fields all have NOT NULL constraint
+- [ ] Use struct model for gorm updates, not map[string]interface{}
+- [ ] No raw SQL for CRUD operations, use gorm model methods
 - [ ] Do not print sensitive information
 - [ ] Use English logs with wrapped logger instance (NEVER use `fmt.Println`, `log.Println`, etc.)
 - [ ] Use structured logging (`Infow`, `Warnw`, `Errorw`, `Debugw`)
@@ -147,6 +167,9 @@ Use this skill when:
 - [ ] Business logic in domain layer
 - [ ] No duplicate code blocks
 - [ ] No magic numbers and magic strings
+- [ ] Prefer struct over map[string]interface{} for known fields
+- [ ] No redundant nil checks for initialized dependencies
+- [ ] Dependencies initialized at startup, not checked repeatedly
 - [ ] Compiles successfully and passes lint
 - [ ] Functions returning error follow zero-value pattern
 - [ ] Use `errors.Is()` for error comparison (NEVER use `==`)
