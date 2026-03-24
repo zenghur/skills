@@ -484,3 +484,269 @@ func ListUsers() ([]User, error) {
 - Use static analysis tools to check code quality
 - Run unit tests to ensure functionality correctness
 - Run `revive ./...` to check code style
+
+## 7. Refactoring Examples
+
+### Before Refactoring: Feature Inventory (REQUIRED)
+
+Before starting any refactoring, document all existing features:
+
+```go
+// Feature Inventory for UserService
+// Date: 2024-01-15
+// Refactoring: Extract authentication logic to separate service
+//
+// Existing Features (ALL must be preserved):
+// 1. User login with username/password
+// 2. User login with email/password
+// 3. Session creation and management
+// 4. Login attempt rate limiting (max 5 attempts)
+// 5. Account lockout after failed attempts
+// 6. Password hashing with bcrypt
+// 7. JWT token generation
+// 8. Refresh token rotation
+// 9. Login audit logging
+// 10. IP address tracking for security
+//
+// Edge Cases to Preserve:
+// - Empty username/email handling
+// - Invalid password format handling
+// - Expired session handling
+// - Concurrent login handling
+// - Account already locked handling
+//
+// Security Features to Preserve:
+// - SQL injection protection
+// - Brute force protection
+// - Session hijacking prevention
+// - Secure token storage
+```
+
+### Correct Refactoring Process
+
+```go
+// Step 1: Keep original code working while adding new structure
+// Step 2: Create feature checklist for verification
+// Step 3: Refactor incrementally with tests passing at each step
+
+// BEFORE: Original monolithic function
+func (s *UserService) Login(username, password string) (*Session, error) {
+    // Feature 1: Rate limiting
+    if s.isRateLimited(username) {
+        s.logger.InfoW("Login rate limited", "username", username)
+        return nil, ErrRateLimited
+    }
+    
+    // Feature 2: Find user
+    user, err := s.repo.FindByUsername(username)
+    if err != nil {
+        s.incrementFailedAttempt(username)
+        return nil, ErrInvalidCredentials
+    }
+    
+    // Feature 3: Check account lockout
+    if user.IsLocked {
+        return nil, ErrAccountLocked
+    }
+    
+    // Feature 4: Verify password
+    if !s.verifyPassword(password, user.PasswordHash) {
+        s.incrementFailedAttempt(username)
+        return nil, ErrInvalidCredentials
+    }
+    
+    // Feature 5: Create session
+    session := s.createSession(user)
+    
+    // Feature 6: Audit logging
+    s.auditLog.Log("login_success", user.ID)
+    
+    return session, nil
+}
+
+// AFTER: Refactored with ALL features preserved
+func (s *UserService) Login(username, password string) (*Session, error) {
+    // Feature 1: Rate limiting - PRESERVED
+    if s.rateLimiter.IsLimited(username) {
+        s.logger.InfoW("Login rate limited", "username", username)
+        return nil, ErrRateLimited
+    }
+    
+    // Feature 2: Find user - PRESERVED
+    user, err := s.userFinder.Find(username)
+    if err != nil {
+        s.rateLimiter.Increment(username)  // Feature preserved
+        return nil, ErrInvalidCredentials
+    }
+    
+    // Feature 3: Check account lockout - PRESERVED
+    if user.IsLocked() {
+        return nil, ErrAccountLocked
+    }
+    
+    // Feature 4: Verify password - PRESERVED
+    if !s.passwordVerifier.Verify(password, user.PasswordHash()) {
+        s.rateLimiter.Increment(username)  // Feature preserved
+        return nil, ErrInvalidCredentials
+    }
+    
+    // Feature 5: Create session - PRESERVED
+    session, err := s.sessionManager.Create(user)
+    if err != nil {
+        return nil, err
+    }
+    
+    // Feature 6: Audit logging - PRESERVED
+    s.auditor.Log(AuditEventLoginSuccess, user.ID())
+    
+    return session, nil
+}
+```
+
+### Incorrect Refactoring (FEATURE LOSS)
+
+```go
+// WRONG: Features silently removed during refactoring
+func (s *UserService) Login(username, password string) (*Session, error) {
+    // Feature 1 (rate limiting) - LOST!
+    
+    user, err := s.repo.FindByUsername(username)
+    if err != nil {
+        // Feature 2 (failed attempt tracking) - LOST!
+        return nil, ErrInvalidCredentials
+    }
+    
+    // Feature 3 (account lockout check) - LOST!
+    
+    if !bcrypt.CheckPasswordHash(password, user.PasswordHash) {
+        return nil, ErrInvalidCredentials
+    }
+    
+    session := &Session{UserID: user.ID}
+    
+    // Feature 6 (audit logging) - LOST!
+    
+    return session, nil
+}
+
+// This refactoring LOST 4 features:
+// 1. Rate limiting
+// 2. Failed attempt tracking
+// 3. Account lockout check
+// 4. Audit logging
+```
+
+### Post-Refactoring Verification Checklist
+
+```go
+// Verification tests for each feature
+func TestLogin_RefactoringVerification(t *testing.T) {
+    // Feature 1: Rate limiting
+    t.Run("rate_limiting_preserved", func(t *testing.T) {
+        // Test that rate limiting still works
+    })
+    
+    // Feature 2: Find user
+    t.Run("user_lookup_preserved", func(t *testing.T) {
+        // Test that user lookup still works
+    })
+    
+    // Feature 3: Account lockout
+    t.Run("account_lockout_preserved", func(t *testing.T) {
+        // Test that lockout check still works
+    })
+    
+    // Feature 4: Password verification
+    t.Run("password_verification_preserved", func(t *testing.T) {
+        // Test that password check still works
+    })
+    
+    // Feature 5: Session creation
+    t.Run("session_creation_preserved", func(t *testing.T) {
+        // Test that session creation still works
+    })
+    
+    // Feature 6: Audit logging
+    t.Run("audit_logging_preserved", func(t *testing.T) {
+        // Test that audit logging still works
+    })
+    
+    // Edge case: Empty username
+    t.Run("empty_username_handling_preserved", func(t *testing.T) {
+        // Test edge case still handled
+    })
+    
+    // Security: SQL injection protection
+    t.Run("sql_injection_protection_preserved", func(t *testing.T) {
+        // Test security feature still works
+    })
+}
+```
+
+### Hidden Features to Watch For
+
+```go
+// These features are often accidentally removed during refactoring:
+
+// 1. Implicit caching
+func (s *UserService) GetUser(id uint) (*User, error) {
+    // Hidden: Cache check before database lookup
+    if cached, ok := s.cache.Get(fmt.Sprintf("user:%d", id)); ok {
+        return cached.(*User), nil  // This caching might be forgotten
+    }
+    
+    user, err := s.repo.FindByID(id)
+    if err != nil {
+        return nil, err
+    }
+    
+    s.cache.Set(fmt.Sprintf("user:%d", id), user, time.Hour)  // Cache write
+    return user, nil
+}
+
+// 2. Background side effects
+func (s *OrderService) CreateOrder(order *Order) error {
+    if err := s.repo.Create(order); err != nil {
+        return err
+    }
+    
+    // Hidden: Async notification
+    go func() {
+        s.notifier.Notify(order.UserID, "order_created")  // Might be forgotten
+    }()
+    
+    // Hidden: Metrics update
+    s.metrics.OrderCount.Inc()  // Might be forgotten
+    
+    return nil
+}
+
+// 3. Validation side effects
+func (s *UserService) Register(user *User) error {
+    // Hidden: Normalization before validation
+    user.Email = strings.ToLower(strings.TrimSpace(user.Email))
+    
+    if err := s.validator.Validate(user); err != nil {
+        return err
+    }
+    
+    // Hidden: Password hashing
+    hashedPassword, err := bcrypt.HashPassword(user.Password)
+    if err != nil {
+        return err
+    }
+    user.Password = hashedPassword
+    
+    return s.repo.Create(user)
+}
+
+// 4. Error enhancement
+func (s *PaymentService) ProcessPayment(payment *Payment) error {
+    if err := s.gateway.Charge(payment); err != nil {
+        // Hidden: Error wrapping with context
+        return fmt.Errorf("payment processing failed for order %d: %w", 
+            payment.OrderID, err)  // Context might be lost
+    }
+    return nil
+}
+```

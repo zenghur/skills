@@ -37,6 +37,15 @@ Use this skill when:
 - **Complete Implementation**: All features must be fully implemented with proper error handling
 - **Testable Code**: Code must be written with testing in mind, but test mocks are only allowed in test files
 
+### Refactoring Principles
+- **Feature Preservation**: Refactoring MUST preserve ALL existing functionality - no features should be lost
+- **Behavior Equivalence**: After refactoring, the system must behave identically to before
+- **No Silent Removals**: Never remove functionality during refactoring without explicit requirement
+- **Feature Inventory**: Before refactoring, list all existing features to ensure none are missed
+- **Verification Required**: After refactoring, verify each feature still works correctly
+- **Incremental Refactoring**: Large refactorings should be broken into smaller, verifiable steps
+- **Rollback Ready**: Keep the ability to rollback if issues are discovered post-refactoring
+
 ---
 
 ## Backend Standards (Go)
@@ -151,6 +160,20 @@ Use this skill when:
 - **Pattern**: `if err != nil { return }` before proceeding with normal logic
 - **Avoid Else**: Prefer early return over else branches when possible
 
+### 13. Refactoring Standards
+- **Feature Inventory**: Before refactoring, document ALL existing features and behaviors
+- **Feature Checklist**: Create a checklist of features to verify after refactoring
+- **No Feature Loss**: Every feature that exists before refactoring MUST exist after refactoring
+- **Behavior Verification**: Test each feature after refactoring to confirm it still works
+- **Edge Cases**: Pay special attention to edge cases and error handling paths
+- **Hidden Features**: Watch for implicit behaviors (caching, logging, validation) that may be overlooked
+- **API Compatibility**: Ensure public APIs remain compatible unless explicitly changing them
+- **Configuration Preserved**: All configuration options must continue to work
+- **Performance Characteristics**: Document and preserve important performance behaviors
+- **Security Features**: Never remove or weaken security measures during refactoring
+- **Incremental Changes**: Large refactorings should be split into smaller, reviewable changes
+- **Rollback Plan**: Have a plan to revert changes if issues are discovered
+
 ## Backend Checklist
 
 - [ ] Interface fields use camelCase
@@ -190,6 +213,11 @@ Use this skill when:
 - [ ] Guard clauses used to handle exceptions first
 - [ ] Early returns reduce nesting levels
 - [ ] Code structure is flat and readable
+- [ ] All existing features documented before refactoring
+- [ ] Feature checklist created and verified after refactoring
+- [ ] No functionality lost during refactoring
+- [ ] Edge cases and error handling verified post-refactoring
+- [ ] Security features preserved during refactoring
 
 ---
 
@@ -281,6 +309,22 @@ Use this skill when:
 - **Pattern**: Check invalid props/state first, return early or show fallback UI
 - **Avoid Else**: Prefer early return over else branches when possible
 
+### 12. Refactoring Standards
+- **Feature Inventory**: Before refactoring, document ALL existing UI features and behaviors
+- **Feature Checklist**: Create a checklist of features to verify after refactoring
+- **No Feature Loss**: Every feature that exists before refactoring MUST exist after refactoring
+- **UI Behavior Preserved**: All user interactions must work the same way after refactoring
+- **Edge Cases**: Watch for conditional rendering, error states, loading states that may be missed
+- **Event Handlers**: All event handlers (click, input, etc.) must be preserved
+- **Computed Properties**: All computed properties and their behaviors must be maintained
+- **Watchers**: All watchers and their side effects must be preserved
+- **Styling**: CSS classes and styles must continue to work correctly
+- **Accessibility**: ARIA attributes and keyboard navigation must be preserved
+- **Responsive Behavior**: Mobile/desktop layouts must continue to work
+- **Component Props**: All props and their default values must be preserved
+- **Component Events**: All emitted events must be preserved
+- **Incremental Changes**: Large refactorings should be split into smaller, reviewable changes
+
 ## Frontend Checklist
 
 - [ ] No business logic implemented in frontend
@@ -308,6 +352,12 @@ Use this skill when:
 - [ ] Guard clauses used to handle exceptions first
 - [ ] Early returns reduce nesting levels
 - [ ] Code structure is flat and readable
+- [ ] All existing UI features documented before refactoring
+- [ ] Feature checklist created and verified after refactoring
+- [ ] No functionality lost during refactoring
+- [ ] Event handlers preserved during refactoring
+- [ ] Accessibility features preserved during refactoring
+- [ ] Responsive behavior verified post-refactoring
 
 ---
 
