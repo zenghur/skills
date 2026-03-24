@@ -6,101 +6,106 @@ This document provides comprehensive code examples demonstrating correct and inc
 
 ### Structured Logging (REQUIRED)
 
-The project uses structured logging with key-value pairs. Always use `Infow`, `Warnw`, `Errorw`, `Debugw` methods.
+The project uses structured logging with key-value pairs. Log keys MUST use camelCase naming following Go/revive conventions (e.g., `userID`, `sessionID`, `apiKey`). Abbreviations like ID, URL, API should remain uppercase in camelCase. Always use `InfoW`, `WarnW`, `ErrorW`, `DebugW` series functions.
 
 #### Correct Structured Logging
 ```go
-// Correct: Use key-value pairs with camelCase keys
-logger.G().Infow("Order executed", 
-    "symbol", order.Symbol,
-    "side", order.Side,
-    "price", order.Price,
-    "quantity", order.Quantity,
+// Correct: Use key-value pairs with camelCase keys (abbreviations stay uppercase)
+logger.G().InfoW("User login successful",
+    "userID", user.ID,
+    "sessionID", session.ID,
+    "ip", request.ClientIP,
 )
 
 // Correct: Error logging with context
-logger.G().Errorw("Failed to process order",
-    "orderId", order.ID,
-    "symbol", order.Symbol,
+logger.G().ErrorW("Failed to process API request",
+    "apiPath", r.URL.Path,
+    "method", r.Method,
     "error", err,
 )
 
 // Correct: Simple message without values
-logger.G().Infow("WebSocket connected")
+logger.G().InfoW("Service started")
 
 // Correct: Duration and timing
-logger.G().Infow("Cycle completed", "duration", time.Since(start))
-e.logger.Infow("Position closed", "symbol", symbol, "pnl", pnl, "reason", reason)
+logger.G().InfoW("Request completed", "duration", time.Since(start))
+e.logger.InfoW("Page viewed", "pageID", pageID, "userID", userID, "duration", duration)
 
 // Correct: Using InfoW series functions (recommended)
-logger.G().InfoW("Order executed", "symbol", order.Symbol, "side", order.Side, "price", order.Price)
-logger.G().ErrorW("Failed to process order", "orderId", order.ID, "symbol", order.Symbol, "error", err)
+logger.G().InfoW("API request received", "apiPath", r.URL.Path, "method", r.Method, "userID", userID)
+logger.G().ErrorW("Database query failed", "query", queryName, "table", tableName, "error", err)
 ```
 
 #### Incorrect Structured Logging (DO NOT DO THIS)
 ```go
 // WRONG: Using formatted strings in log messages
-logger.G().Infow("Order executed: %s %s @ %.2f", order.Symbol, order.Side, order.Price)
+logger.G().InfoW(fmt.Sprintf("API request: %s %s", r.Method, r.URL.Path))
 
 // WRONG: String concatenation
-logger.G().Infow("Position closed: " + symbol + " PnL: " + fmt.Sprintf("%.2f", pnl))
+logger.G().InfoW("User logged in: " + userName + " from " + ip)
 
 // WRONG: Using fmt.Sprintf
-logger.G().Errorw(fmt.Sprintf("Failed to process order %s: %v", order.ID, err))
+logger.G().ErrorW(fmt.Sprintf("Failed to process request %s: %v", r.URL.Path, err))
 
-// WRONG: Not using camelCase for keys
-logger.G().Infow("Order executed", "order_id", order.ID, "order_symbol", order.Symbol)
+// WRONG: Not using camelCase for keys (note: userID not userId per Go conventions)
+logger.G().InfoW("API request received", "user_id", userID, "api_path", r.URL.Path)
 
 // WRONG: Using old format methods (these methods no longer exist)
-logger.G().Infof("Order executed: %s", order.Symbol)  // Method removed!
+logger.G().Infof("Service started on port: %d", port)  // Method removed!
 logger.G().Info("WebSocket connected")                // Method removed!
 ```
 
 ### Security in Logging
 ```go
 // Correct: Use English, do not print sensitive information
-logger.G().Infow("User authenticated", "userId", user.ID)
-logger.G().Warnw("Database connection timeout", "attempt", retryCount)
-logger.G().Errorw("Failed to process order", "orderId", order.ID, "error", err)
+logger.G().InfoW("User authenticated", "userID", user.ID)
+logger.G().WarnW("Database connection timeout", "attempt", retryCount)
+logger.G().ErrorW("Failed to process request", "apiPath", r.URL.Path, "error", err)
 
 // Incorrect: Printing sensitive information
-logger.G().Infow("API key loaded", "apiKey", apiKey) // Prohibited!
-logger.G().Infow("User credentials", "password", password) // Prohibited!
+logger.G().InfoW("API key loaded", "apiKey", apiKey) // Prohibited!
+logger.G().InfoW("User credentials", "password", password) // Prohibited!
 ```
 
-### Key Naming Reference Table
+### Key Naming Reference Table (Go/revive Conventions)
+
+Abbreviations (ID, URL, API, HTTP, etc.) should remain uppercase in camelCase: `userID`, `apiURL`, `httpRequest`.
+
 | Context | Correct Key | Incorrect Key |
 |---------|-------------|---------------|
-| Order ID | `orderId` | `order_id`, `OrderID` |
-| User ID | `userId` | `user_id`, `UserID` |
-| Symbol | `symbol` | `Symbol` |
-| Price | `price` | `Price` |
+| User ID | `userID` | `user_id`, `userId`, `UserID` |
+| Session ID | `sessionID` | `session_id`, `sessionId`, `SessionID` |
+| API Path | `apiPath` | `api_path`, `ApiPath` |
+| Request ID | `requestID` | `request_id`, `requestId`, `RequestID` |
+| Product ID | `productID` | `product_id`, `productId`, `ProductID` |
+| Page ID | `pageID` | `page_id`, `pageId`, `PageID` |
 | Error | `error` | `err`, `Error` |
 | Duration | `duration` | `Duration`, `dur` |
-| Quantity | `quantity` | `qty`, `Quantity` |
+| Page View | `pageView` | `page_view`, `PageView` |
 | Status | `status` | `Status` |
-| Balance | `balance` | `Balance` |
-| PnL | `pnl` | `PnL`, `profit_loss` |
+| Click Count | `clickCount` | `click_count`, `ClickCount` |
+| Response Time | `responseTime` | `response_time`, `ResponseTime` |
 | API Key | `apiKey` | `api_key`, `APIKey` |
-| Order Symbol | `orderSymbol` | `order_symbol`, `OrderSymbol` |
+| API URL | `apiURL` | `api_url`, `apiUrl`, `APIURL` |
+| HTTP Request | `httpRequest` | `http_request`, `HttpRequest`, `HTTPRequest` |
 
 ## 2. Timestamp Handling Examples
 
 ### Correct Timestamp Processing
 ```go
 // Database model
-type TradeModel struct {
+type UserSessionModel struct {
     ID        uint   `gorm:"primaryKey"`
     CreatedAt int64  `gorm:"not null"` // int64 timestamp
 }
 
 // API response
-func (h *Handler) GetTrade(c *gin.Context) {
-    trade := &dto.Trade{
-        ID:        tradeModel.ID,
-        CreatedAt: tradeModel.CreatedAt, // Return int64 timestamp
+func (h *Handler) GetSession(c *gin.Context) {
+    session := &dto.Session{
+        ID:        sessionModel.ID,
+        CreatedAt: sessionModel.CreatedAt, // Return int64 timestamp
     }
-    response.Success(c, trade)
+    response.Success(c, session)
 }
 ```
 
@@ -109,19 +114,20 @@ func (h *Handler) GetTrade(c *gin.Context) {
 ### Correct DDD Layer Structure
 ```go
 // Domain layer (does not depend on infrastructure)
-type Order struct {
-    ID    string
-    Price float64
+type UserSession struct {
+    ID        string
+    UserID    string
+    ExpiresAt int64
     // Business logic methods
 }
 
 // Application layer (coordinates domain objects)
-type OrderService struct {
-    orderRepo OrderRepository
+type SessionService struct {
+    sessionRepo SessionRepository
 }
 
 // Infrastructure layer (implements interfaces)
-type OrderRepositoryImpl struct {
+type SessionRepositoryImpl struct {
     db *gorm.DB
 }
 ```

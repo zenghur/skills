@@ -66,6 +66,8 @@ Use this skill when:
 
 ### 3. Logging Standards
 - **Global unified logger**: MUST use wrapped logger instance (e.g., `logger.G()`, `logger.L()`, etc.), NEVER use raw `fmt.Println`, `log.Println` or similar. Multiple logger instances are allowed, naming is flexible as long as semantically appropriate
+- **Structured logging**: Use `InfoW`, `DebugW`, `WarnW`, `ErrorW` series functions or `Infow`, `Debugw`, `Warnw`, `Errorw` with key-value pairs
+- **Key naming**: Log keys MUST use camelCase naming (e.g., `orderId`, `userId`, `apiKey`), NEVER use snake_case (e.g., `order_id`, `user_id`)
 - **Language**: Use English for logs, clear and understandable
 - **Security**: Do not print sensitive fields (token, access key, secret key, etc.)
 - **Level**: Reasonably use Info, Warn, Error levels
@@ -159,7 +161,7 @@ Use this skill when:
 - [ ] No raw SQL for CRUD operations, use gorm model methods
 - [ ] Do not print sensitive information
 - [ ] Use English logs with wrapped logger instance (NEVER use `fmt.Println`, `log.Println`, etc.)
-- [ ] Use structured logging (`Infow`, `Warnw`, `Errorw`, `Debugw` or `InfoW`, `WarnW`, `ErrorW`, `DebugW`)
+- [ ] Use structured logging (`InfoW`, `WarnW`, `ErrorW`, `DebugW`)
 - [ ] Log keys use camelCase naming
 - [ ] No `fmt.Sprintf` or string concatenation in log messages
 - [ ] Database fields use int64 timestamps
