@@ -704,12 +704,18 @@ func CreateOrder(productID ProductID, quantity Quantity, price Money) (*Order, e
 
 ### 14. Function Design Standards
 
-#### 14.1 Keep Functions Small
+#### 14.1 Control Complexity
 
-Functions should be short, no more than 20 lines, with indentation no more than 2 levels.
+Focus on cyclomatic complexity rather than line count. A function should do one thing well.
+
+**Guidelines**:
+- **Cyclomatic complexity ≤15**: Use `gocyclo` to measure, split if exceeds
+- **Nesting depth ≤3**: Deep nesting indicates need for extraction or guard clauses
+- **Single responsibility**: Function should have one clear purpose
+- **Readability first**: A 40-line linear function is better than 20 lines of spaghetti
 
 ```go
-// ❌ Bad: Long, deeply nested function
+// ❌ Bad: High complexity, deep nesting
 func ProcessOrder(order *Order) error {
     if order != nil {
         if order.Items != nil {
@@ -728,7 +734,7 @@ func ProcessOrder(order *Order) error {
     return nil
 }
 
-// ✅ Good: Short, single responsibility
+// ✅ Good: Low complexity, clear structure
 func ProcessOrder(order *Order) error {
     if err := validateOrder(order); err != nil {
         return fmt.Errorf("validate order: %w", err)
@@ -759,6 +765,24 @@ func processItems(items []Item) error {
     }
     return nil
 }
+
+// ✅ Also acceptable: Longer but linear and readable
+func BuildReport(data *ReportData) *Report {
+    report := &Report{}
+    report.Title = data.Title
+    report.GeneratedAt = time.Now()
+    report.Summary = calculateSummary(data)
+    report.Details = buildDetails(data.Items)
+    report.Totals = calculateTotals(data)
+    // More linear operations...
+    return report
+}
+```
+
+**Measure complexity**:
+```bash
+# Check cyclomatic complexity
+gocyclo -over 15 .
 ```
 
 #### 14.2 Single Responsibility Principle
@@ -801,26 +825,51 @@ func SendWelcomeEmail(user *User) error {
 
 #### 14.3 Minimize Parameters
 
-Fewer parameters are better. Avoid 3 or more parameters when possible.
+Fewer parameters are generally better, but use judgment based on context.
+
+**Guidelines**:
+- **1-3 parameters**: Ideal, easy to understand and use
+- **4-5 parameters**: Acceptable when logically related
+- **6+ parameters**: Consider refactoring with struct or Option pattern
 
 ```go
-// ❌ Bad: Too many parameters
-func CreateOrder(userID string, productID string, quantity int, price float64, discount float64) (*Order, error) {
+// ❌ Bad: Too many unrelated parameters
+func CreateOrder(userID string, productID string, quantity int, price float64, discount float64, currency string, note string) (*Order, error) {
     // ...
 }
 
-// ✅ Good: Use struct to encapsulate
+// ✅ Good: Use struct to encapsulate related parameters
 type CreateOrderRequest struct {
     UserID    string
     ProductID string
     Quantity  int
-    Price     float64
-    Discount  float64
+    Price     Money
+    Note      string
 }
 
 func CreateOrder(req *CreateOrderRequest) (*Order, error) {
     // ...
 }
+
+// ✅ Also acceptable: Related parameters that naturally belong together
+func DrawRectangle(x, y, width, height int, color string) {
+    // These parameters are logically related, no need for struct
+}
+
+// ✅ Good: Functional Option pattern for optional parameters
+func NewServer(addr string, opts ...ServerOption) *Server {
+    server := &Server{addr: addr}
+    for _, opt := range opts {
+        opt(server)
+    }
+    return server
+}
+
+// Usage
+server := NewServer(":8080",
+    WithTimeout(30*time.Second),
+    WithTLS(certFile, keyFile),
+)
 ```
 
 #### 14.4 Avoid Side Effects
@@ -1056,9 +1105,10 @@ Recognize and address these code smells:
 | **Rigidity** | Hard to change, one change triggers cascade | Decouple, single responsibility |
 | **Fragility** | Easy to break, one change breaks other features | Add tests, refactor |
 | **Duplication** | Same code appears in multiple places | DRY principle, abstract common functions |
-| **Long Function** | Function exceeds 20 lines | Split into multiple small functions |
+| **High Complexity** | Function cyclomatic complexity > 15 | Split into smaller, focused functions |
+| **Deep Nesting** | More than 3 levels of indentation | Use guard clauses, extract functions |
 | **Large Class** | Class takes on too many responsibilities | Single responsibility, split class |
-| **Long Parameter List** | More than 3 parameters | Use struct to encapsulate |
+| **Long Parameter List** | 6+ parameters, hard to track | Use struct or Option pattern |
 | **Divergent Change** | One class modified for multiple reasons | Single responsibility |
 | **Shotgun Surgery** | One change involves multiple classes | Merge related logic |
 | **Feature Envy** | Function uses another class's data excessively | Move function to data's class |
@@ -1142,9 +1192,9 @@ go tool pprof mem.prof
 - [ ] No functionality lost during refactoring
 - [ ] Edge cases and error handling verified post-refactoring
 - [ ] Security features preserved during refactoring
-- [ ] Functions are short (≤20 lines, ≤2 indentation levels)
+- [ ] Functions have controlled complexity (cyclomatic complexity ≤15)
 - [ ] Functions have single responsibility
-- [ ] Function parameters minimized (≤3 preferred)
+- [ ] Function parameters reasonable (≤5 acceptable, 6+ consider struct/option pattern)
 - [ ] No hidden side effects in functions
 - [ ] Commands separated from queries
 - [ ] Code formatted with gofmt/goimports
@@ -1297,8 +1347,8 @@ go tool pprof mem.prof
 ## Daily Development Checklist
 
 - [ ] Variables/functions clearly express intent?
-- [ ] Functions under 20 lines?
-- [ ] Function parameters under 3?
+- [ ] Functions focused and readable?
+- [ ] Cyclomatic complexity reasonable (≤15)?
 - [ ] Any duplicate code?
 - [ ] Error handling complete?
 - [ ] Comments explain "Why" not "How"?
