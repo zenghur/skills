@@ -41,3 +41,10 @@ logs/
 dist/
 build/
 out/
+
+# Test temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+testdata/

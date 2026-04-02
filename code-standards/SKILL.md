@@ -642,8 +642,9 @@ backend/
 
 **Test fixtures and temporary files**:
 - **Fixtures**: Store in `testdata/` directory next to the test file
-- **Temporary files**: Use `os.MkdirTemp()` or `os.CreateTemp()`, cleanup in `defer`
-- **Downloaded assets**: Use `testdata/` for static fixtures, `os.MkdirTemp()` for dynamic content
+- **Temporary files**: Use `os.MkdirTemp()` or `t.TempDir()`, cleanup in `defer`
+- **Temporary directory**: Use `tmp/` at project root for test-generated files (already gitignored)
+- **Downloaded assets**: Use `testdata/` for static fixtures, `tmp/` for dynamic content
 - **Never hardcode fixture paths**: Use `testdata` package variable or `os.DirFS`
 
 ```go
@@ -2311,8 +2312,6 @@ frontend/
 │   │   └── checkout-flow.spec.ts
 │   └── fixtures/
 │       └── mock-data.ts            # E2E test fixtures
-└── cypress/                       # or playwright/, depending on choice
-    └── ...
 ```
 
 **Test type guidelines**:
@@ -2326,7 +2325,7 @@ frontend/
 **Test fixtures and temporary files**:
 - **E2E fixtures**: Store in `e2e/fixtures/`, import directly
 - **Mock data**: Define in `e2e/fixtures/` or `__tests__/fixtures/`
-- **Temporary files**: Use `fs.mkdtempSync()` in Node.js context, cleanup after test
+- **Temporary files**: Use `tmp/` at project root for test-generated files (already gitignored)
 - **Environment variables**: Use `.env.test` for E2E test configuration
 
 ```typescript
@@ -2339,17 +2338,18 @@ test('user can view their orders', async ({ page }) => {
   // ...
 });
 
-// ✅ Good: Temporary file in tests
+// ✅ Good: Temporary file in tmp/ (gitignored)
 import { promises as fs } from 'fs';
-import { tmpdir } from 'os';
 import { join } from 'path';
 
 test('export generates CSV file', async () => {
-  const tmpFile = join(tmpdir(), `export-${Date.now()}.csv`);
+  const tmpDir = join(process.cwd(), 'tmp', 'exports');
+  await fs.mkdir(tmpDir, { recursive: true });
+  const tmpFile = join(tmpDir, 'export.csv');
   await generateExport(tmpFile);
   const content = await fs.readFile(tmpFile, 'utf-8');
   expect(content).toContain('order_id');
-  await fs.unlink(tmpFile); // cleanup
+  // cleanup: tmp/ is gitignored, but you can clean up after test
 });
 ```
 
