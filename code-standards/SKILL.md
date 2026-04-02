@@ -632,6 +632,11 @@ backend/
     │   └── order_integration_test.go
     └── e2e/
         └── user_flow_test.go         # E2E tests: full API workflows
+testdata/           # Test fixtures (Go convention)
+├── integration/
+│   └── mock-data.json
+└── e2e/
+    └── mock-data.json
 ```
 
 **Test type guidelines**:
@@ -642,19 +647,18 @@ backend/
 | E2E test | `tests/e2e/` | Full API flow | Real database |
 
 **Test fixtures and temporary files**:
-- **Integration fixtures**: Store in `tests/integration/fixtures/` or `testdata/`
-- **E2E fixtures**: Store in `tests/e2e/fixtures/`
+- **Fixtures**: Store in `testdata/` directory (Go convention)
 - **Temporary files**: Use `os.MkdirTemp()` or `t.TempDir()`, cleanup in `defer`
 - **Temporary directory**: Use `tmp/` at project root for test-generated files (already gitignored)
 - **Downloaded assets**: Use `testdata/` for static fixtures, `tmp/` for dynamic content
-- **Never hardcode fixture paths**: Use `os.DirFS` for fixtures
+- **Never hardcode fixture paths**: Use `os.DirFS("testdata")` for fixtures
 
 ```go
-// ✅ Good: Using fixtures directory
-var fixturesFS = os.DirFS("tests/integration/fixtures")
+// ✅ Good: Using testdata for fixtures
+var testdataFS = os.DirFS("testdata")
 
 func TestParseConfig(t *testing.T) {
-    data, err := fs.ReadFile(fixturesFS, "valid_config.yaml")
+    data, err := fs.ReadFile(testdataFS, "valid_config.yaml")
     // ...
 }
 
@@ -670,7 +674,7 @@ func TestExportCSV(t *testing.T) {
 - Unit tests: `{package}_{subject}_test.go` (e.g., `user_service_test.go`)
 - Integration tests: `{subject}_integration_test.go` in `tests/integration/`
 - E2E tests: `{flow}_e2e_test.go` in `tests/e2e/`
-- Fixtures: `{description}.{ext}` in `tests/e2e/fixtures/` (e.g., `tests/e2e/fixtures/valid_user.json`)
+- Fixtures: `{description}.{ext}` in `testdata/` (e.g., `testdata/valid_user.json`)
 
 ### 12. Guard Clause Standards
 - **Handle Exceptions First**: Check and handle exceptional cases before normal logic
@@ -2307,17 +2311,16 @@ frontend/
 │   └── stores/
 │       ├── user.ts
 │       └── __tests__/
-│           └── user.test.ts
+│           └── user.test.ts        # Store unit tests
 └── tests/
     ├── integration/
     │   ├── user-api.test.ts        # Integration tests: API calls
-    │   └── setup.ts
+    │   └── fixtures/
     └── e2e/
-        ├── specs/
-        │   ├── user-flow.spec.ts       # E2E tests: user workflows
-        │   └── checkout-flow.spec.ts
+        ├── user-flow.spec.ts       # E2E tests
+        ├── checkout-flow.spec.ts
         └── fixtures/
-            └── mock-data.ts            # E2E test fixtures
+            └── mock-data.ts
 ```
 
 **Test type guidelines**:
@@ -2327,10 +2330,10 @@ frontend/
 | View test | `__tests__/` next to view | Vitest + @vue/test-utils | View with child components |
 | Store test | `__tests__/` next to store | Vitest | Pinia store logic |
 | Integration test | `tests/integration/` | Vitest | API calls, service integration |
-| E2E test | `tests/e2e/specs/` | Playwright/Cypress | Full user flow |
+| E2E test | `tests/e2e/` | Playwright/Cypress | Full user flow |
 
 **Test fixtures and temporary files**:
-- **Integration fixtures**: Store in `tests/integration/`
+- **Integration fixtures**: Store in `tests/integration/fixtures/`
 - **E2E fixtures**: Store in `tests/e2e/fixtures/`, import directly
 - **Mock data**: Define in `tests/e2e/fixtures/` or `__tests__/fixtures/`
 - **Temporary files**: Use `tmp/` at project root for test-generated files (already gitignored)
