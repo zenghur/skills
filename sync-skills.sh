@@ -10,17 +10,17 @@ TARGET_DIR="$HOME/.claude/skills"
 echo "Syncing skills from $SOURCE_DIR to $TARGET_DIR"
 echo ""
 
-# Delete existing skills in target
-rm -rf "$TARGET_DIR"/*/SKILL.md
-
 for skill in "$SOURCE_DIR"/*/SKILL.md; do
   if [ -f "$skill" ]; then
     skill_name=$(basename "$(dirname "$skill")")
+    source_dir="$SOURCE_DIR/$skill_name"
     target_dir="$TARGET_DIR/$skill_name"
-    target="$target_dir/SKILL.md"
 
-    mkdir -p "$target_dir"
-    cp "$skill" "$target"
+    # Delete existing skill in target
+    rm -rf "$target_dir"
+
+    # Copy entire skill directory
+    cp -r "$source_dir" "$target_dir"
     echo "✓ Synced $skill_name"
   fi
 done
