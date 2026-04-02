@@ -1,26 +1,27 @@
 #!/bin/bash
-# Sync skills from ~/.claude/skills to local repository
+# Sync skills from local repository to ~/.claude/skills
 
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SOURCE_DIR="$HOME/.claude/skills"
-TARGET_DIR="$SCRIPT_DIR"
+SOURCE_DIR="$SCRIPT_DIR"
+TARGET_DIR="$HOME/.claude/skills"
 
 echo "Syncing skills from $SOURCE_DIR to $TARGET_DIR"
 echo ""
 
+# Delete existing skills in target
+rm -rf "$TARGET_DIR"/*/SKILL.md
+
 for skill in "$SOURCE_DIR"/*/SKILL.md; do
   if [ -f "$skill" ]; then
     skill_name=$(basename "$(dirname "$skill")")
-    target="$TARGET_DIR/$skill_name/SKILL.md"
+    target_dir="$TARGET_DIR/$skill_name"
+    target="$target_dir/SKILL.md"
 
-    if [ -f "$target" ]; then
-      cp "$skill" "$target"
-      echo "✓ Synced $skill_name"
-    else
-      echo "⚠ Skipped $skill_name (not found in target)"
-    fi
+    mkdir -p "$target_dir"
+    cp "$skill" "$target"
+    echo "✓ Synced $skill_name"
   fi
 done
 
