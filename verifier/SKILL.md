@@ -64,31 +64,19 @@ Your value is in the **last 20%**.
 
 ---
 
-## Browser Automation Tool Detection (CRITICAL)
+## Browser Automation (Required)
 
-Before any frontend verification, detect available tools IN THIS ORDER:
+Frontend verification requires Playwright and Chromium. If not installed:
 
 ```bash
-# 1. Check for Playwright MCP
-env | grep -i playwright
+# Install Playwright
+npm install -D @playwright/test
 
-# 2. Check for Claude Chrome Extension MCP
-env | grep -i claude_in_chrome
-
-# 3. Check for Chrome DevTools MCP
-env | grep -i chrome_devtools
+# Install Chromium browser
+npx playwright install chromium
 ```
 
-**Priority Order — use the first one found:**
-1. `mcp__playwright__*` — Playwright MCP server (recommended)
-2. `mcp__claude-in-chrome__*` — Claude Chrome extension
-3. `mcp__chrome-devtools*` — Chrome DevTools MCP
-
-**If none found:**
-- Try to install Playwright: `npm install -D @playwright/test && npx playwright install`
-- If installation fails, report PARTIAL with what could be verified
-
-**DO NOT say "needs a browser" without first checking these tools.**
+**If Playwright or Chromium is missing, verification cannot proceed — report this and stop.**
 
 ---
 
@@ -130,7 +118,7 @@ curl -s http://localhost:3000/api/users | jq 'length'
 curl -I http://localhost:3000/_next/image?url=/hero.png 2>/dev/null | grep "HTTP"
 ```
 
-### Step 3: Browser Automation (if available)
+### Step 3: Browser Automation
 
 ```javascript
 // Playwright example
@@ -400,7 +388,7 @@ Do the OPPOSITE of these urges:
 - "The code looks correct" — **Run it**
 - "The implementer's tests pass" — **Verify independently**
 - "This is probably fine" — **Run it**
-- "I don't have a browser" — **Check for mcp__playwright__* tools FIRST**
+- "I don't have a browser" — **Install Playwright: npm install -D @playwright/test && npx playwright install chromium**
 - "HTML returned 200, so it works" — **curl the subresources**
 - "This would take too long" — **Run it anyway**
 - "Plan doesn't mention this, so skip" — **Follow the plan EXACTLY**
@@ -1066,73 +1054,3 @@ If you're unsure whether something is a bug:
 - Try to break it differently
 
 **Uncertainty ≠ PARTIAL**
-
----
-
-# MCP Tool Call Format (Reference)
-
-## MCP Tool Naming Convention
-
-Claude Code uses this format: `mcp__<server>__<tool>`
-
-## Common MCP Tools
-
-### Playwright MCP
-```
-mcp__playwright__page_navigate       # Navigate to URL
-mcp__playwright__page_screenshot     # Take screenshot
-mcp__playwright__page_click         # Click element
-mcp__playwright__page_fill          # Fill input
-mcp__playwright__page_evaluate       # Run JS in page
-mcp__playwright__console_messages    # Get console logs
-```
-
-### Chrome DevTools MCP
-```
-mcp__chrome-devtools__open          # Open tab
-mcp__chrome-devtools__navigate      # Navigate URL
-mcp__chrome-devtools__screenshot    # Take screenshot
-mcp__chrome-devtools__eval          # Run JS
-```
-
-### Claude Chrome Extension
-```
-mcp__claude-in-chrome__browse       # Browse page
-mcp__claude-in-chrome__screenshot   # Screenshot
-```
-
-## Using MCP Tools
-
-```javascript
-// Example: Navigate with Playwright MCP
-await mcp__playwright__page_navigate({
-  url: 'http://localhost:3000'
-});
-
-// Example: Screenshot
-await mcp__playwright__page_screenshot({
-  path: '/tmp/screenshot.png',
-  fullPage: true
-});
-
-// Example: Get console messages
-const errors = await mcp__playwright__console_messages();
-
-// Example: Click element
-await mcp__playwright__page_click({
-  selector: 'button[type="submit"]'
-});
-```
-
-## Detecting Available MCP Tools
-
-```bash
-# List all available MCP tools
-env | grep -i "MCP"
-
-# Check tool availability before using
-# If mcp__playwright__* available → use Playwright
-# Else if mcp__claude-in-chrome__* available → use Chrome
-# Else if mcp__chrome-devtools__* available → use DevTools
-# Else → report PARTIAL: "No browser automation available"
-```
