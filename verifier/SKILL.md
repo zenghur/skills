@@ -120,34 +120,43 @@ curl -I http://localhost:3000/_next/image?url=/hero.png 2>/dev/null | grep "HTTP
 
 ### Step 3: Browser Automation
 
+用 Playwright 完成以下操作：
+
 ```javascript
-// Playwright example
 const { chromium } = require('@playwright/test');
 
 async function verify() {
   const browser = await chromium.launch();
   const page = await browser.newPage();
 
-  // Navigate
+  // 1. 导航/浏览
   await page.goto('http://localhost:3000');
 
-  // Check for console errors
+  // 2. 获取控制台日志
   const errors = [];
   page.on('console', msg => {
     if (msg.type() === 'error') errors.push(msg.text());
   });
 
-  // Verify page loaded
-  const title = await page.title();
+  // 3. 截图
+  await page.screenshot({ path: '/tmp/homepage.png', fullPage: false });
 
-  // Click key elements
-  await page.click('button[type="submit"]');
+  // 4. 填表
   await page.fill('input[name="email"]', 'test@example.com');
+  await page.fill('input[name="password"]', 'password123');
 
-  // Wait for network idle
+  // 5. 点击
+  await page.click('button[type="submit"]');
+
+  // 6. 执行 JS
+  const result = await page.evaluate(() => {
+    return document.title;
+  });
+
+  // 7. 等待网络空闲
   await page.waitForLoadState('networkidle');
 
-  // Report
+  // 验证
   if (errors.length > 0) {
     console.log('FAIL: Console errors found:', errors);
   }
@@ -155,6 +164,17 @@ async function verify() {
   await browser.close();
 }
 ```
+
+**操作清单：**
+
+| 操作 | 方法 |
+|------|------|
+| 导航/浏览 | `page.goto(url)` |
+| 截图 | `page.screenshot({ path, fullPage })` |
+| 点击 | `page.click(selector)` |
+| 填表/输入 | `page.fill(selector, text)` |
+| 执行 JS | `page.evaluate(fn)` |
+| 获取控制台 | `page.on('console', callback)` |
 
 ### Step 4: Subresource Checklist
 
