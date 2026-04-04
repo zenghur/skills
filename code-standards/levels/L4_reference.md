@@ -10,6 +10,8 @@
 
 ## Backend Checklist
 
+> **[@CoT-required]**: Before checking items, execute LLM-Review-Process Step 1 (Rule Localization) to identify which checklist items apply to this review.
+
 - [ ] Interface fields use camelCase
 - [ ] All fields have explicit `gorm:"column:field_name"` tag
 - [ ] No index/uniqueIndex tags in gorm struct
@@ -66,6 +68,8 @@
 
 ## Frontend Checklist
 
+> **[@CoT-required]**: Before checking items, execute LLM-Review-Process Step 1 (Rule Localization) to identify which checklist items apply to this review.
+
 - [ ] No business logic implemented in frontend
 - [ ] No complex calculations in frontend
 - [ ] No data aggregation in frontend
@@ -114,6 +118,8 @@
 
 ## Code Review Checklist
 
+> **[@CoT-required]**: Before checking items, execute LLM-Review-Process Step 1 (Rule Localization) to identify which checklist items apply to this review.
+
 ### General
 - [ ] Code readable and understandable?
 - [ ] Obvious bugs or performance issues?
@@ -151,6 +157,8 @@
 ---
 
 ## Daily Development Checklist
+
+> **[@CoT-required]**: Before checking items, execute LLM-Review-Process Step 1 (Rule Localization) to identify which checklist items apply to this review.
 
 - [ ] Variables/functions clearly express intent?
 - [ ] Functions focused and readable?
