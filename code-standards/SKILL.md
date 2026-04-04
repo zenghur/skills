@@ -69,9 +69,9 @@ Complete checklists (Backend, Frontend, Security, Daily, Code Review) + complete
 These principles underpin all levels:
 
 ### Separation of Concerns
-- **Backend**: Handles ALL business logic, calculations, and data aggregation
-- **Frontend**: ONLY handles presentation, receives pre-calculated data from backend
-- **No Business Logic in Frontend**: Frontend should never perform complex calculations
+- **Backend**: Handles ALL business logic, calculations, and complex data aggregation
+- **Frontend**: No business logic, can do pure data calculations on data already received
+- **No Business Logic in Frontend**: Frontend must not contain rules, decisions, or business logic
 - **Backend Trust**: Frontend trusts backend to provide all necessary data in ready-to-display format
 
 ### Production-Grade Code

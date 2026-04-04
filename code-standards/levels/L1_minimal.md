@@ -7,8 +7,8 @@
 
 ## 1. Backend Owns Business Logic
 
-Backend handles ALL business logic, calculations, and data aggregation.
-Frontend ONLY handles presentation, receives pre-calculated data from backend.
+Backend handles ALL business logic and complex calculations.
+Frontend can do pure data calculations on data already received (e.g., expensive client-side computations to reduce server load), but must NOT contain business logic.
 
 ```go
 // ❌ Bad: Frontend doing business calculation
@@ -119,17 +119,23 @@ goroutine.SafeGo(ctx, func() {
 })
 ```
 
-## 8. Frontend: Display Only, No Calculations
+## 8. Frontend: No Business Logic, Pure Calculations OK
 
-Frontend receives pre-calculated data, never calculates business values.
+Frontend must NOT contain business logic (rules, validation, data transformation).
+Pure data calculations are allowed if data is already provided by backend
+(e.g., expensive client-side computation to reduce server load).
 
-```go
-// ❌ Bad
+```typescript
+// ❌ Bad: Business logic in frontend
+// "If VIP user, apply 10% discount" → This is business logic, keep in backend
+const discount = user.isVIP ? calculateDiscount(order.total, 0.1) : 0;
+
+// ✅ Good: Pure calculation on existing data (no business rules)
 const total = orders.reduce((sum, o) => sum + o.total, 0);
 
-// ✅ Good
-// Backend sends calculated total, frontend just displays it
-<span>Total: {{ user.calculatedTotal }}</span>
+// ✅ Also Good: Backend organizes data, frontend computes on it
+// Backend sends {items: [{price: 100, qty: 2}, {price: 50, qty: 1}]}
+// Frontend computes: items.reduce((sum, i) => sum + i.price * i.qty, 0)
 ```
 
 ## 9. GORM: Explicit Column Tags
