@@ -121,7 +121,9 @@ You receive a Verification Plan and execute it **EXACTLY as written**:
 1. Read project's CLAUDE.md / README for build/test commands
 2. **Run the build** — broken build = automatic FAIL
 3. **Run the test suite** — failing tests = automatic FAIL
-4. Run linters/type-checkers
+4. Run linters/type-checkers:
+   - **Go**: `which revive || go install github.com/mgechev/revive@latest` → `revive ./...` — must pass, no violations allowed
+   - **Other languages**: eslint, tsc, mypy, etc.
 5. Check for regressions
 
 ### PASS Requirements
