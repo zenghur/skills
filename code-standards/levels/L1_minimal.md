@@ -5,7 +5,7 @@
 
 ---
 
-## 1. Backend Owns Business Logic
+## 1. Backend Owns Business Logic [@CoT-required]
 
 Backend handles ALL business logic and complex calculations.
 Frontend can do pure data calculations on data already received (e.g., expensive client-side computations to reduce server load), but must NOT contain business logic.
@@ -23,7 +23,7 @@ func UserCard({ user, totalOrderAmount }) {
 }
 ```
 
-## 2. Function Naming: Verb Prefix
+## 2. Function Naming: Verb Prefix [@CoT-required]
 
 Function names use camelCase and start with a verb.
 
@@ -37,7 +37,7 @@ func GetUserByID(userID string) (*User, error) { ... }
 func ValidateUserPermissions(user *User) error { ... }
 ```
 
-## 3. Errors as Return Values
+## 3. Errors as Return Values [@CoT-required]
 
 Return errors via return values, never use special values to indicate errors.
 
@@ -61,7 +61,7 @@ func FindUser(id string) (*User, error) {
 }
 ```
 
-## 4. Use errors.Is() for Error Comparison
+## 4. Use errors.Is() for Error Comparison [@CoT-required]
 
 Never use `==` to compare errors. Use `errors.Is()` or `errors.As()`.
 
@@ -74,7 +74,7 @@ if errors.Is(err, ErrNotFound) { ... }
 if errors.As(err, &validationErr) { ... }
 ```
 
-## 5. Prefer Struct Over Map
+## 5. Prefer Struct Over Map [@CoT-required]
 
 Use struct instead of `map[string]interface{}` when field types are known.
 
@@ -88,7 +88,7 @@ func process(data *OrderRequest) { ... }
 
 **Why**: Compile-time type checking, IDE support, no runtime hash computation.
 
-## 6. No Magic Values
+## 6. No Magic Values [@CoT-required]
 
 No magic numbers or strings. Define meaningful constants.
 
@@ -105,7 +105,7 @@ const (
 if user.Status == StatusActive { ... }
 ```
 
-## 7. Goroutines via SafeGo
+## 7. Goroutines via SafeGo [@CoT-required]
 
 Never use `go` keyword directly. Use `goroutine.SafeGo` or `goroutine.SafeGoWithContext`.
 
@@ -119,7 +119,7 @@ goroutine.SafeGo(ctx, func() {
 })
 ```
 
-## 8. Frontend: No Business Logic, Pure Calculations OK
+## 8. Frontend: No Business Logic, Pure Calculations OK [@CoT-required]
 
 Frontend must NOT contain business logic (rules, validation, data transformation).
 Pure data calculations are allowed if data is already provided by backend
@@ -138,7 +138,7 @@ const total = orders.reduce((sum, o) => sum + o.total, 0);
 // Frontend computes: items.reduce((sum, i) => sum + i.price * i.qty, 0)
 ```
 
-## 9. GORM: Explicit Column Tags
+## 9. GORM: Explicit Column Tags [@CoT-required]
 
 Every field must have explicit `gorm:"column:field_name"`. Never use index/uniqueIndex tags.
 
@@ -157,7 +157,7 @@ type User struct {
 }
 ```
 
-## 10. Pre-Commit: Format + Lint + Vet
+## 10. Pre-Commit: Format + Lint + Vet [@CoT-required]
 
 Before every commit, run:
 
