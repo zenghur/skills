@@ -514,21 +514,39 @@ type UserResponse struct {
 
 ## 12. Frontend Standards (Vue 3 + TypeScript)
 
-### 12.1 Single Responsibility Principle
+### 12.1 No Business Logic, Pure Calculations Allowed
 
-**Presentation Only**: Frontend is ONLY responsible for displaying data.
+Frontend must NOT contain business logic (rules, validation, complex data transformation).
+Pure data calculations are allowed if data is already provided by backend
+(e.g., expensive client-side computation to reduce server load).
+
+**Business Logic = Rules/Decisions** (must stay in backend):
+- "If VIP user, apply 10% discount"
+- "If order > $100, free shipping"
+- "Calculate tax based on user location"
+
+**Pure Calculation = Math on Existing Data** (allowed in frontend):
+- `items.reduce((sum, i) => sum + i.price * i.qty, 0)`
+- Sorting a list by a field
+- Filtering visible items
 
 ```typescript
-// ❌ Bad: Frontend doing business calculation
-const UserCard = ({ user }) => {
-  const discount = user.orders.reduce((sum, o) => sum + o.total, 0);
-  // Frontend aggregations are forbidden
+// ❌ Bad: Business logic in frontend
+const UserCard = ({ user, orders }) => {
+  const discount = user.isVIP ? calculateVIPDiscount(orders) : 0;
+  // Business rules belong in backend
 };
 
-// ✅ Good: Backend sends pre-calculated data
-const UserCard = ({ user, calculatedTotal }) => {
-  // Just display what backend provides
-  return <span>Total: {calculatedTotal}</span>;
+// ✅ Good: Backend sends calculated values
+const UserCard = ({ user, calculatedDiscount }) => {
+  return <span>Discount: {calculatedDiscount}</span>;
+};
+
+// ✅ Good: Pure calculation on existing data
+const OrderSummary = ({ items }) => {
+  const subtotal = items.reduce((sum, i) => sum + i.price * i.qty, 0);
+  // Math on existing data is fine
+  return <span>Subtotal: {subtotal}</span>;
 };
 ```
 
@@ -536,7 +554,7 @@ const UserCard = ({ user, calculatedTotal }) => {
 
 - **Timestamps**: Receive int64 from backend, format to local time
 - **Numbers**: Use backend-provided formatted values, simple formatting only
-- **Data Transformation**: Only simple sorting/filtering, no aggregation
+- **Data Transformation**: Simple sorting/filtering allowed, complex aggregation prefers backend
 
 ### 12.3 Component Structure
 
