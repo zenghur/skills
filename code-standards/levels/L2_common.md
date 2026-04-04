@@ -1,0 +1,688 @@
+# Level 2: Common — Daily Development Rules
+
+> **When to read**: Normal feature development (writing a service, handler, component)
+> **Extends**: Level 1 rules, adds daily development specifics
+> **Scope**: Naming, Error Handling, Database, Logging, Comments, Guard Clauses
+
+---
+
+## 1. Naming Conventions
+
+### 1.1 Basic Naming Rules
+
+- **Internal interface data**: Use camelCase
+- **External system integration**: Use field names as-is from external system
+- **Comments**: Use English, follow Google conventions
+- **Package names**: lowercase, avoid underscores
+- **Function names**: camelCase, start with verb
+
+### 1.2 Meaningful Names
+
+```go
+// ❌ Bad: Vague
+var d int
+const max = 100
+x := getUser()
+
+// ✅ Good: Descriptive
+var duration int
+const MaxConnections = 100
+activeUser := getUser()
+```
+
+### 1.3 Interface Naming
+
+Use verb + -er suffix:
+
+```go
+// ❌ Bad
+type I interface { ... }
+type UserInterface interface { ... }
+
+// ✅ Good
+type Reader interface { Read(p []byte) (n int, err error) }
+type UserRepository interface {
+    FindByID(id string) (*User, error)
+    Save(user *User) error
+}
+```
+
+### 1.4 Avoid Misleading Names
+
+```go
+// ❌ Bad
+var userList map[string]*User  // It's a map, not a list
+var accountData *Account        // "Data" is meaningless
+
+// ✅ Good
+var userMap map[string]*User
+var account *Account
+```
+
+### 1.5 Consistent Terminology
+
+```go
+// ❌ Bad: Mixed
+func fetchUser() { ... }
+func getUserData() { ... }
+
+// ✅ Good: Unified
+func GetUser() { ... }
+func GetUserData() { ... }
+```
+
+---
+
+## 2. Error Handling
+
+### 2.1 Zero-Value Pattern
+
+When a function returns (value, error) and error is not nil, other returns must be zero values:
+
+```go
+// ✅ Good
+func GetUser(id uint) (*User, error) {
+    var user User
+    if err := db.First(&user, id).Error; err != nil {
+        return nil, err
+    }
+    return &user, nil
+}
+
+// ✅ Good: All returns zero when error
+func GetUserInfo(id uint) (string, int, error) {
+    var user User
+    if err := db.First(&user, id).Error; err != nil {
+        return "", 0, err
+    }
+    return user.Name, user.Age, nil
+}
+```
+
+### 2.2 Error Wrapping
+
+```go
+// ❌ Bad: Lost context
+func ProcessPayment(orderID string) error {
+    order, err := GetOrder(orderID)
+    if err != nil {
+        return err
+    }
+    // ...
+}
+
+// ✅ Good: Wrapped context
+func ProcessPayment(orderID string) error {
+    order, err := GetOrder(orderID)
+    if err != nil {
+        return fmt.Errorf("get order %s: %w", orderID, err)
+    }
+    if err := chargeCustomer(order); err != nil {
+        return fmt.Errorf("charge customer for order %s: %w", orderID, err)
+    }
+    return nil
+}
+```
+
+### 2.3 Custom Error Types
+
+```go
+type ValidationError struct {
+    Field   string
+    Message string
+}
+
+func (e *ValidationError) Error() string {
+    return fmt.Sprintf("validation error: %s - %s", e.Field, e.Message)
+}
+
+err := ValidateUser(user)
+var validationErr *ValidationError
+if errors.As(err, &validationErr) {
+    // Handle validation error
+}
+```
+
+---
+
+## 3. Database Standards (GORM)
+
+### 3.1 Field Tags
+
+- Every field must have explicit `gorm:"column:field_name"`
+- Never use `index` or `uniqueIndex` tags
+- Database fields use `snake_case`
+
+### 3.2 DDL Principles
+
+- Write DDL explicitly, never use `AutoMigrate`
+- All fields must have `NOT NULL` constraint
+- Never check `IS NULL` / `IS NOT NULL` in code
+
+### 3.3 Update Operations
+
+Use struct model, not `map[string]interface{}`:
+
+```go
+// ❌ Bad
+db.Model(&user).Updates(map[string]interface{}{
+    "name": "new name",
+})
+
+// ✅ Good: Type-safe, IDE support
+db.Model(&user).Updates(&User{Name: "new name"})
+```
+
+### 3.4 CRUD Operations
+
+- **Create**: `db.Create()`
+- **Update**: `db.Save()`, `db.Updates()`
+- **Delete**: `db.Delete()`
+- **Query**: Use gorm methods, not raw SQL
+
+Raw SQL allowed only for:
+- Complex queries gorm cannot express
+- DDL operations (`CREATE TABLE`, `ALTER TABLE`)
+
+---
+
+## 4. Logging Standards
+
+### 4.1 Logger Usage
+
+Use wrapped logger instance. NEVER use raw `fmt.Println` or `log.Println`.
+
+```go
+// ✅ Good
+logger.InfoW("user_created",
+    "user_id", user.ID,
+    "action", "create",
+)
+logger.DebugW("request_body", "body", string(data))
+logger.ErrorW("db_error", "err", err)
+
+// ❌ Bad
+fmt.Println("user created")  // Never
+log.Printf("error: %v", err)  // Never
+```
+
+### 4.2 Structured Logging Keys
+
+Log keys MUST use camelCase:
+
+```go
+// ✅ Good
+logger.InfoW("order_processed",
+    "order_id", order.ID,
+    "user_id", order.UserID,
+    "total_amount", order.Total,
+)
+
+// ❌ Bad: snake_case keys
+logger.InfoW("order_processed",
+    "order_id", order.ID,  // Still camelCase
+    "user_id", order.ID,
+)
+```
+
+### 4.3 Security
+
+Do not print sensitive fields: tokens, access keys, secret keys, passwords.
+
+### 4.4 Log Levels
+
+Use appropriately:
+- **Info**: Normal operations
+- **Warn**: Recoverable issues
+- **Error**: Failures needing attention
+- **Debug**: Detailed debugging (not in production)
+
+---
+
+## 5. Timestamp Handling
+
+- **Database storage**: int64 (UnixMilli)
+- **Frontend-backend transmission**: int64
+- **Frontend display**: Convert to local time, format as `YYYY-MM-DD HH:mm:ss`
+
+---
+
+## 6. Comments
+
+### 6.1 Core Principles
+
+- Comments are a remedy, not a default
+- Code should express intent; comments explain **why**, not **what**
+- Keep comments updated with code changes
+- No outdated or misleading comments
+
+### 6.2 Good Comments
+
+```go
+// ✅ Good: Explain intent (Why)
+// Use binary search because data is sorted by time
+func FindRecentEvent(events []Event, threshold time.Time) *Event {
+    // ...
+}
+
+// ✅ Good: Warning
+// Note: This function is not thread-safe, must lock before calling
+func UpdateCache(key string, value interface{}) { ... }
+
+// ✅ Good: TODO with tracking
+// TODO(user123): Optimize performance, consider using cache
+func GetPopularProducts() []Product { ... }
+```
+
+### 6.3 Bad Comments
+
+```go
+// ❌ Bad: Redundant
+// Constructor
+func NewUser() *User { ... }
+
+// ❌ Bad: Commented out code
+// func oldProcess() {
+//     ...
+// }
+
+// ❌ Bad: Log-style (use Git instead)
+// 2023-03-16: Fixed null pointer issue
+func Process() { ... }
+```
+
+### 6.4 Function Documentation
+
+Public functions must have documentation comments:
+
+```go
+// CreateUser creates a new user and saves to database.
+// name cannot be empty, email must be valid format.
+// Returns created user object or error.
+func CreateUser(name, email string) (*User, error) { ... }
+```
+
+---
+
+## 7. Guard Clauses
+
+Handle exceptional cases first with early returns:
+
+```go
+// ❌ Bad: Deep nesting
+func ProcessOrder(order *Order) error {
+    if order != nil {
+        if order.Items != nil {
+            if len(order.Items) > 0 {
+                // Main logic...
+            }
+        }
+    }
+    return nil
+}
+
+// ✅ Good: Guard clauses, flat structure
+func ProcessOrder(order *Order) error {
+    if order == nil {
+        return errors.New("order is nil")
+    }
+    if len(order.Items) == 0 {
+        return errors.New("order has no items")
+    }
+
+    // Main logic...
+    return nil
+}
+```
+
+### Patterns
+
+- `if err != nil { return err }` first
+- Invert conditions to return early
+- Avoid else branches when possible
+
+---
+
+## 8. Code Formatting
+
+### 8.1 Vertical Formatting
+
+Top-down: high-level logic first, private helpers last:
+
+```go
+// Public methods first
+func (h *Handler) HandleGetUser(w http.ResponseWriter, r *http.Request) {
+    userID := r.URL.Query().Get("id")
+    user, err := h.service.GetUser(userID)
+    if err != nil {
+        respondError(w, err)
+        return
+    }
+    respondJSON(w, user)
+}
+
+// Private helpers last
+func respondJSON(w http.ResponseWriter, data interface{}) { ... }
+func respondError(w http.ResponseWriter, err error) { ... }
+```
+
+### 8.2 Horizontal Formatting
+
+```go
+// ❌ Bad: Too long
+if user != nil && user.IsActive && user.HasPermission("admin") && time.Now().Before(user.ExpiryTime) {
+    // ...
+}
+
+// ✅ Good: Line breaks
+if user != nil &&
+    user.IsActive &&
+    user.HasPermission("admin") &&
+    time.Now().Before(user.ExpiryTime) {
+    // ...
+}
+
+// ✅ Good: Extracted conditions
+isValidUser := user != nil && user.IsActive
+hasPermission := user.HasPermission("admin")
+isNotExpired := time.Now().Before(user.ExpiryTime)
+
+if isValidUser && hasPermission && isNotExpired {
+    // ...
+}
+```
+
+### 8.3 Tools
+
+```bash
+gofmt -w .       # Format code
+goimports -w .   # Format + organize imports
+go vet ./...     # Static analysis
+revive ./...     # Linting
+```
+
+---
+
+## 9. Test Synchronization
+
+### 9.1 Sync with Code Changes
+
+- When modifying code, update tests simultaneously
+- New features require test cases before merge
+- Bug fixes must include regression tests
+- Refactored code must update existing tests
+
+### 9.2 Test Naming
+
+Use table-driven tests:
+
+```go
+func TestCreateUser(t *testing.T) {
+    tests := []struct {
+        name    string
+        input   CreateUserRequest
+        want    *User
+        wantErr error
+    }{
+        {
+            name: "valid user",
+            input: CreateUserRequest{Name: "Alice", Email: "alice@example.com"},
+            want:    &User{Name: "Alice", Email: "alice@example.com"},
+            wantErr: nil,
+        },
+        {
+            name:    "empty name",
+            input:   CreateUserRequest{Name: "", Email: "bob@example.com"},
+            want:    nil,
+            wantErr: &ValidationError{Field: "name"},
+        },
+    }
+
+    for _, tt := range tests {
+        t.Run(tt.name, func(t *testing.T) {
+            got, err := CreateUser(tt.input)
+            if !errors.Is(err, tt.wantErr) {
+                t.Errorf("CreateUser() error = %v, want %v", err, tt.wantErr)
+            }
+            if !reflect.DeepEqual(got, tt.want) {
+                t.Errorf("CreateUser() = %v, want %v", got, tt.want)
+            }
+        })
+    }
+}
+```
+
+### 9.3 Test Directory Structure
+
+```
+backend/
+├── internal/
+│   ├── domain/
+│   │   ├── user.go
+│   │   └── user_test.go          # Unit tests next to code
+│   └── service/
+│       ├── user_service.go
+│       └── user_service_test.go
+└── tests/
+    ├── integration/              # Multi-layer tests
+    └── e2e/                      # Full API flow tests
+testdata/                        # Test fixtures (Go convention)
+```
+
+### 9.4 Test Principles
+
+- **Fast**: No external I/O
+- **Independent**: Tests don't depend on each other
+- **Repeatable**: Same result every time
+- **Self-Validating**: Clear pass/fail
+
+---
+
+## 10. Eliminate Duplication
+
+DRY: Don't Repeat Yourself
+
+```go
+// ❌ Bad: Duplicated logic
+func ProcessUserOrder(u *User, order *Order) { ... }
+func ProcessGuestOrder(g *Guest, order *Order) { ... }
+
+// ✅ Good: Extracted
+func ProcessOrder(customer Customer, order *Order) { ... }
+```
+
+---
+
+## 11. API Field Alignment
+
+Backend field definitions are authoritative:
+
+```go
+// ✅ Backend defines the contract
+type UserResponse struct {
+    UserID      int64  `json:"userId"`
+    DisplayName string `json:"displayName"`
+    CreatedAt   int64  `json:"createdAt"`
+}
+
+// Frontend MUST adapt to this contract
+// ❌ Bad: Requesting backend change
+// ✅ Good: Frontend aligns its types
+```
+
+---
+
+## 12. Frontend Standards (Vue 3 + TypeScript)
+
+### 12.1 Single Responsibility Principle
+
+**Presentation Only**: Frontend is ONLY responsible for displaying data.
+
+```typescript
+// ❌ Bad: Frontend doing business calculation
+const UserCard = ({ user }) => {
+  const discount = user.orders.reduce((sum, o) => sum + o.total, 0);
+  // Frontend aggregations are forbidden
+};
+
+// ✅ Good: Backend sends pre-calculated data
+const UserCard = ({ user, calculatedTotal }) => {
+  // Just display what backend provides
+  return <span>Total: {calculatedTotal}</span>;
+};
+```
+
+### 12.2 Data Display Standards
+
+- **Timestamps**: Receive int64 from backend, format to local time
+- **Numbers**: Use backend-provided formatted values, simple formatting only
+- **Data Transformation**: Only simple sorting/filtering, no aggregation
+
+### 12.3 Component Structure
+
+- Vue 3 Composition API: Use `<script setup>` syntax
+- TypeScript: All code must be strongly typed
+- Props Validation: Define prop types explicitly
+- Component Naming: PascalCase files
+
+```typescript
+// ✅ Good
+<script setup lang="ts">
+interface Props {
+  userId: number;
+  userName: string;
+}
+
+const props = defineProps<Props>();
+</script>
+```
+
+### 12.4 State Management
+
+- **Pinia**: Use for global state only
+- **Local State**: Use `ref` and `reactive`
+- **No Business Logic in Stores**: Stores manage UI state only
+
+```typescript
+// ✅ Good: Store for UI state only
+export const useUserUIStore = defineStore('userUI', () => {
+  const isLoading = ref(false);
+  const errorMessage = ref<string | null>(null);
+  return { isLoading, errorMessage };
+});
+```
+
+### 12.5 API Integration
+
+- Request Handling: Use centralized API modules
+- Error Handling: Display user-friendly messages
+- Loading States: Always show loading indicators
+
+### 12.6 Code Quality Standards
+
+- TypeScript strict mode enabled
+- No `any` type — define proper types
+- ESLint + Prettier for formatting
+
+### 12.7 Guard Clauses
+
+```typescript
+// ✅ Good: Handle exceptions first
+const UserProfile = ({ user }) => {
+  if (!user) {
+    return <EmptyState message="No user data" />;
+  }
+  return <div>{user.name}</div>;
+};
+```
+
+### 12.8 Test Synchronization
+
+- New components require test cases
+- Bug fixes include regression tests
+- Update tests when props/events change
+
+```typescript
+// ✅ Good: Component test
+import { mount } from '@vue/test-utils';
+import UserCard from '../UserCard.vue';
+
+describe('UserCard', () => {
+  it('displays user name', () => {
+    const wrapper = mount(UserCard, {
+      props: { userName: 'Alice' },
+    });
+    expect(wrapper.text()).toContain('Alice');
+  });
+});
+```
+
+### 12.9 Test Directory Structure
+
+```
+frontend/
+├── src/
+│   ├── components/
+│   │   ├── UserCard.vue
+│   │   └── __tests__/
+│   │       └── UserCard.test.ts
+│   ├── views/
+│   │   └── __tests__/
+│   │       └── Dashboard.test.ts
+│   └── stores/
+│       └── __tests__/
+│           └── user.test.ts
+└── tests/
+    ├── integration/
+    └── e2e/
+```
+
+### 12.10 Naming Conventions
+
+- Component files: PascalCase (e.g., `UserCard.vue`)
+- Event names: kebab-case
+- CSS classes: kebab-case
+- Store files: camelCase or kebab-case (e.g., `userStore.ts`)
+
+### 12.11 Responsive Design
+
+Support both desktop and mobile layouts. Use CSS media queries or utility classes.
+
+```vue
+<!-- ✅ Good: Responsive layout -->
+<template>
+  <div class="user-card">
+    <div class="user-card__desktop">{{ user.name }}</div>
+    <div class="user-card__mobile">{{ user.name }}</div>
+  </div>
+</template>
+
+<style scoped>
+.user-card__desktop { display: block; }
+.user-card__mobile { display: none; }
+
+@media (max-width: 768px) {
+  .user-card__desktop { display: none; }
+  .user-card__mobile { display: block; }
+}
+</style>
+```
+
+### 12.12 UI/UX Standards
+
+- **Loading States**: Show loading indicators for async operations
+- **Error States**: Handle and display errors gracefully
+- **Empty States**: Show appropriate messages when no data available
+- **Accessibility**: Follow WCAG guidelines
+
+```vue
+<!-- ✅ Good: Complete state handling -->
+<template>
+  <div class="user-profile">
+    <div v-if="isLoading" class="loading-spinner" />
+    <div v-else-if="error" class="error-message">{{ error }}</div>
+    <div v-else-if="!user" class="empty-state">No user found</div>
+    <div v-else class="user-content">{{ user.name }}</div>
+  </div>
+</template>
+```
