@@ -10,7 +10,8 @@ Extends L1+L2 with adversarial testing and visual verification.
 
 These probes try to break the system:
 
-- **Concurrency** — parallel requests: `curl url & curl url & wait`
+- **Concurrency** — parallel requests: `curl url & curl url & wait`; Go: run `go test -race ./...` to detect race conditions
+- **Go-specific probes**: `go vet ./...`, `staticcheck ./...` (if available), check for goroutine leaks with `-race` flag
 - **Boundary values** — 0, -1, empty string, very long strings (10KB+), unicode (中文中文), MAX_INT
 - **Idempotency** — same POST twice: second should be no-op or error
 - **Orphan operations** — DELETE /api/users/99999 (non-existent)
