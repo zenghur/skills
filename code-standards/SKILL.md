@@ -34,9 +34,9 @@ Before giving any conclusion or suggestion, you MUST follow this three-step chai
 State which rules from which level you are checking.
 
 ```
-本次 Review 涉及：
-- 规则来源：[L1 / L2 / L3 / L4]
-- 具体规则：[规则编号] [规则一句话描述]
+Review Scope:
+- Rule Source: [L1 / L2 / L3 / L4]
+- Specific Rules: [Rule Number] [One-line rule description]
 ```
 
 ### Step 2: Inspection Process
@@ -44,10 +44,10 @@ State which rules from which level you are checking.
 For each rule, show your checking steps explicitly:
 
 ```
-规则 [编号]：[描述]
-检查内容：
-- [具体检查项1]：结果
-- [具体检查项2]：结果
+Rule [Number]: [Description]
+Inspection:
+- [Specific check 1]: Result
+- [Specific check 2]: Result
 ```
 
 ### Step 3: Conclusion Output
@@ -55,9 +55,9 @@ For each rule, show your checking steps explicitly:
 Only then give your conclusion:
 
 ```
-结论：[合规 / 不合规 / 需改进]
-依据：[引用了哪些规则的哪些检查项]
-建议：[如有，需基于 Step 2 的检查结果自然导出]
+Conclusion: [Compliant / Non-Compliant / Needs Improvement]
+Basis: [Which rules and checks support this conclusion]
+Recommendation: [If applicable, must derive naturally from Step 2 findings]
 ```
 
 **Enforcement**: Rules marked `[@CoT-required]` in L1 trigger this full three-step process. Other levels use the same process for all review operations.
