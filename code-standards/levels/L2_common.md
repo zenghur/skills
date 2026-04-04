@@ -10,6 +10,8 @@
 
 ### 1.1 Basic Naming Rules
 
+> **[@CoT-required]**: When reviewing naming conventions, execute LLM-Review-Process Step 1-3 before giving conclusions.
+
 - **Internal interface data**: Use camelCase
 - **External system integration**: Use field names as-is from external system
 - **Comments**: Use English, follow Google conventions
@@ -76,6 +78,8 @@ func GetUserData() { ... }
 ## 2. Error Handling
 
 ### 2.1 Zero-Value Pattern
+
+> **[@CoT-required]**: When reviewing error handling, execute LLM-Review-Process Step 1-3 before giving conclusions.
 
 When a function returns (value, error) and error is not nil, other returns must be zero values:
 
@@ -149,6 +153,8 @@ if errors.As(err, &validationErr) {
 
 ### 3.1 Field Tags
 
+> **[@CoT-required]**: When reviewing database standards, execute LLM-Review-Process Step 1-3 before giving conclusions.
+
 - Every field must have explicit `gorm:"column:field_name"`
 - Never use `index` or `uniqueIndex` tags
 - Database fields use `snake_case`
@@ -189,6 +195,8 @@ Raw SQL allowed only for:
 ## 4. Logging Standards
 
 ### 4.1 Logger Usage
+
+> **[@CoT-required]**: When reviewing logging standards, execute LLM-Review-Process Step 1-3 before giving conclusions.
 
 Use wrapped logger instance. NEVER use raw `fmt.Println` or `log.Println`.
 
@@ -251,6 +259,8 @@ Use appropriately:
 
 ### 6.1 Core Principles
 
+> **[@CoT-required]**: When reviewing comments, execute LLM-Review-Process Step 1-3 before giving conclusions.
+
 - Comments are a remedy, not a default
 - Code should express intent; comments explain **why**, not **what**
 - Keep comments updated with code changes
@@ -308,6 +318,8 @@ func CreateUser(name, email string) (*User, error) { ... }
 
 Handle exceptional cases first with early returns:
 
+> **[@CoT-required]**: When reviewing guard clauses, execute LLM-Review-Process Step 1-3 before giving conclusions.
+
 ```go
 // ❌ Bad: Deep nesting
 func ProcessOrder(order *Order) error {
@@ -346,6 +358,8 @@ func ProcessOrder(order *Order) error {
 ## 8. Code Formatting
 
 ### 8.1 Vertical Formatting
+
+> **[@CoT-required]**: When reviewing code formatting, execute LLM-Review-Process Step 1-3 before giving conclusions.
 
 Top-down: high-level logic first, private helpers last:
 
@@ -406,6 +420,8 @@ revive ./...     # Linting
 ## 9. Test Synchronization
 
 ### 9.1 Sync with Code Changes
+
+> **[@CoT-required]**: When reviewing test synchronization, execute LLM-Review-Process Step 1-3 before giving conclusions.
 
 - When modifying code, update tests simultaneously
 - New features require test cases before merge
@@ -515,6 +531,8 @@ type UserResponse struct {
 ## 12. Frontend Standards (Vue 3 + TypeScript)
 
 ### 12.1 No Business Logic, Pure Calculations Allowed
+
+> **[@CoT-required]**: When reviewing frontend standards, execute LLM-Review-Process Step 1-3 before giving conclusions.
 
 Frontend must NOT contain business logic (rules, validation, complex data transformation).
 Pure data calculations are allowed if data is already provided by backend
