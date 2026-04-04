@@ -23,6 +23,47 @@ Use this skill when:
 
 ---
 
+## LLM Review Operation Flow (Mandatory)
+
+**Applies to**: All code review, PR review, security audit, and refactoring verification.
+
+Before giving any conclusion or suggestion, you MUST follow this three-step chain of thought:
+
+### Step 1: Rule Localization
+
+State which rules from which level you are checking.
+
+```
+本次 Review 涉及：
+- 规则来源：[L1 / L2 / L3 / L4]
+- 具体规则：[规则编号] [规则一句话描述]
+```
+
+### Step 2: Inspection Process
+
+For each rule, show your checking steps explicitly:
+
+```
+规则 [编号]：[描述]
+检查内容：
+- [具体检查项1]：结果
+- [具体检查项2]：结果
+```
+
+### Step 3: Conclusion Output
+
+Only then give your conclusion:
+
+```
+结论：[合规 / 不合规 / 需改进]
+依据：[引用了哪些规则的哪些检查项]
+建议：[如有，需基于 Step 2 的检查结果自然导出]
+```
+
+**Enforcement**: Rules marked `[@CoT-required]` in L1 trigger this full three-step process. Other levels use the same process for all review operations.
+
+---
+
 ## Progressive Disclosure Levels
 
 ### [Level 1: Minimal](levels/L1_minimal.md) — 10 Core Rules
