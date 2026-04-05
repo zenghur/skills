@@ -149,15 +149,15 @@ if errors.As(err, &validationErr) {
 
 ### 2.4 No Redundant Nil Checks
 
-> **[@CoT-required]**: Before writing a `!= nil` check on a pointer, trace the pointer's origin to determine if it can actually be nil. If the source makes it impossible to be nil, the check is redundant and must not be written.
+> **[@CoT-required]**: Before writing a `!= nil` or `== nil` check on a pointer, trace the pointer's origin to determine if it can actually be nil. If the source makes it impossible to be nil, the check is redundant and must not be written.
 
 **CoT Analysis Steps:**
 1. **Origin**: Where did this pointer come from? (constructor, DI container, global, function return)
-2. **Guarantee**: Can the origin guarantee non-nil? (initialized at startup, constructor sets it, etc.)
-3. **Decision**: If non-nil is guaranteed by origin → remove the check. If uncertain → keep the check.
+2. **Guarantee**: Can the origin guarantee non-nil (for `!=`) or already-handled-nil (for `==`)? (initialized at startup, constructor sets it, function already returns on nil, etc.)
+3. **Decision**: If the check is guaranteed unnecessary by origin → remove it. If uncertain → keep the check.
 
 ```go
-// ❌ Bad: Redundant nil check — config is initialized at startup
+// ❌ Bad: Redundant != nil check — config is initialized at startup
 func (s *Service) Start() error {
     if s.config != nil {  // s.config set in NewService, never nil
         return s.config.Validate()
@@ -170,7 +170,7 @@ func (s *Service) Start() error {
     return s.config.Validate()  // config is never nil
 }
 
-// ❌ Bad: Redundant nil check — logger injected at construction
+// ❌ Bad: Redundant != nil check — logger injected at construction
 type Handler struct {
     logger *Logger  // Set in NewHandler, always non-nil
 }
@@ -185,9 +185,46 @@ func (h *Handler) Handle() {
 func (h *Handler) Handle() {
     h.logger.Info("handling")  // logger is guaranteed non-nil
 }
+
+// ❌ Bad: Redundant == nil check — error already indicates nil
+func GetUser(id string) (*User, error) {
+    user, err := db.Find(id)
+    if user == nil {  // Redundant — if err != nil, user is nil by zero value
+        return nil, ErrUserNotFound
+    }
+    return user, nil
+}
+
+// ✅ Good: Check error, not the value
+func GetUser(id string) (*User, error) {
+    user, err := db.Find(id)
+    if err != nil {
+        return nil, ErrUserNotFound
+    }
+    return user, nil
+}
+
+// ❌ Bad: Redundant == nil check — already nil-checked earlier
+func Process(user *User) error {
+    if user == nil {
+        return ErrUserNil
+    }
+    if user.Profile == nil {  // Redundant — user.Profile cannot be nil here
+        return ErrProfileNil
+    }
+    return nil
+}
+
+// ✅ Good: Remove the redundant second check
+func Process(user *User) error {
+    if user == nil {
+        return ErrUserNil
+    }
+    return nil
+}
 ```
 
-**Key insight**: Dependencies injected via constructor and initialized at startup are guaranteed non-nil. Only check nil when the origin makes it possible (e.g., function returns, user input, optional parameters).
+**Key insight**: Both `!= nil` and `== nil` can be redundant. `!= nil` is redundant when the pointer is guaranteed non-nil (DI, startup init). `== nil` is redundant when the error already captures the nil case, or when a prior check already established the pointer is non-nil. Only check nil when the origin makes nil possible.
 
 ---
 
