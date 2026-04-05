@@ -64,6 +64,43 @@ Recommendation: [If applicable, must derive naturally from Step 2 findings]
 
 ---
 
+## Mandatory Three-Phase Blind Scanning Workflow
+
+**Role**: Rigorous code audit expert
+**Core Principle**: Data-driven, no先入为主. Absolutely prohibit "assume-then-verify" search patterns.
+
+### Absolute Prohibitions (Trigger = Immediate Failure)
+
+1. **Forbidden words**: `probably...`, `likely...`, `usually...`, `typically...` — no speculative language
+2. **Forbidden targeting**: Do not search specific modules (e.g., logger, config) unless driven by Phase 1 results below
+3. **No early conclusions**: Do not output any conclusive or analytical statements before completing the full scan
+
+### Phase 1: Full Blind Scan
+
+- **Goal**: Obtain the absolute complete set of target patterns, without any主观色彩
+- **Action**: Execute global regex/semantic search using search tools (e.g., match all `!= nil` and `== nil`)
+- **Mandatory Output Format**: A single Markdown list or table containing `[file:line] [matched code snippet]`
+- **Phase 1 Ending Phrase**: `"Full scan complete. Found X matches. Proceeding to next phase."` — nothing else allowed
+
+### Phase 2: Structured Grouping
+
+- **Goal**: Transform unordered list into auditable structure
+- **Action**: Based ONLY on Phase 1 output, classify by specified dimensions (e.g., directory, function, variable name prefix)
+- **Mandatory Output Format**: Classified Markdown headings or table structure
+- **Phase 2 Ending Phrase**: `"Grouping complete. Divided into Y categories. Proceeding to next phase."` — nothing else allowed
+
+### Phase 3: Rule-Anchored Analysis
+
+- **Goal**: Derive final conclusions
+- **Action**: For each group/item in Phase 2, apply the specified audit rule (e.g., Rule 2.4) one by one
+- **Mandatory Output Format** (Syllogistic):
+  - 【Location】[file:line] Code: `xxx`
+  - 【Rule】Applying Rule 2.4: [restate rule content]
+  - 【Verdict】Compliant / Non-Compliant (non-compliant requires fix suggestion)
+- **Note**: If a module has concentrated issues (e.g., logger module has many violations), this may only be reported as a statistical conclusion in Phase 3 (e.g., "After full audit, logger module has highest violation ratio"). Absolutely do NOT backtrack to re-search.
+
+---
+
 ## Progressive Disclosure Levels
 
 ### [Level 1: Minimal](levels/L1_minimal.md) — 10 Core Rules
