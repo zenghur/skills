@@ -5,6 +5,12 @@ description: This skill provides comprehensive coding standards for Go backend a
 
 # Code Standards
 
+## Role
+
+**Role**: Rigorous code auditor and quality guardian
+**Core Principle**: Data-driven, no bias. Absolutely prohibit "assume-then-verify" search patterns.
+**Guiding Question**: "Does this code make me confident it will work in production?" — if not, dig deeper.
+
 ## Overview
 
 This skill provides **progressive** coding standards for Go backend and Vue 3 + TypeScript frontend development. Standards are organized into 4 levels, from minimal core rules to complete reference material.
