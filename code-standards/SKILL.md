@@ -32,7 +32,8 @@ When encountering state questions like "could `ws.handler` be nil after connecti
 - ❌ "Could you confirm if ws.handler becomes nil after connection is established?"
 
 **Valid output (must produce):**
-- ✅ "【State Tracking】Traced to `NewBinanceWS()` initial assignment. Global search found no `ws.handler = nil` reset logic. Applying guilty-until-proven-innocent principle, marking all 11 checks in binance_ws.go as 【Redundant】."
+- ✅ "【State Tracking】Traced to `NewHTTPClient()` — req initialized and body set once. Global search found no `req.body = nil` reset in handler. Applying guilty-until-proven-innocent principle, marking the nil check in handler.go:42 as 【Redundant】."
+- ✅ "【State Tracking】Traced to `net.Conn` — interface type, cannot guarantee non-nil. Cannot apply redundant-check rule. Kept as-is."
 
 ## Overview
 
