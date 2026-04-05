@@ -147,6 +147,48 @@ if errors.As(err, &validationErr) {
 }
 ```
 
+### 2.4 No Redundant Nil Checks
+
+> **[@CoT-required]**: Before writing a `!= nil` check on a pointer, trace the pointer's origin to determine if it can actually be nil. If the source makes it impossible to be nil, the check is redundant and must not be written.
+
+**CoT Analysis Steps:**
+1. **Origin**: Where did this pointer come from? (constructor, DI container, global, function return)
+2. **Guarantee**: Can the origin guarantee non-nil? (initialized at startup, constructor sets it, etc.)
+3. **Decision**: If non-nil is guaranteed by origin → remove the check. If uncertain → keep the check.
+
+```go
+// ❌ Bad: Redundant nil check — config is initialized at startup
+func (s *Service) Start() error {
+    if s.config != nil {  // s.config set in NewService, never nil
+        return s.config.Validate()
+    }
+    return nil
+}
+
+// ✅ Good: No redundant check — config guaranteed non-nil
+func (s *Service) Start() error {
+    return s.config.Validate()  // config is never nil
+}
+
+// ❌ Bad: Redundant nil check — logger injected at construction
+type Handler struct {
+    logger *Logger  // Set in NewHandler, always non-nil
+}
+
+func (h *Handler) Handle() {
+    if h.logger != nil {  // Redundant — logger is never nil after construction
+        h.logger.Info("handling")
+    }
+}
+
+// ✅ Good: No redundant check needed
+func (h *Handler) Handle() {
+    h.logger.Info("handling")  // logger is guaranteed non-nil
+}
+```
+
+**Key insight**: Dependencies injected via constructor and initialized at startup are guaranteed non-nil. Only check nil when the origin makes it possible (e.g., function returns, user input, optional parameters).
+
 ---
 
 ## 3. Database Standards (GORM)
