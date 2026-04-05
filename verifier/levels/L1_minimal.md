@@ -56,6 +56,7 @@ The user or orchestrator provides a verification plan:
 4. Run linters/type-checkers:
    - **Go** (优先): `which revive || go install github.com/mgechev/revive@latest` → `revive ./...` — must pass, no violations allowed
    - **Go** (备选): `which golangci-lint || go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest` → `golangci-lint run ./...` — 仅在 revive 不可用时使用
+   - **Mandatory**: If both revive and golangci-lint are unavailable (`which` returns empty and `go install` also fails), verifier must FAIL — lint step cannot be skipped
    - **Other languages**: eslint, tsc, mypy, etc.
 5. Check for regressions in related code
 

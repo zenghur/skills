@@ -18,7 +18,7 @@ npm install -D @playwright/test
 npx playwright install chromium
 ```
 
-**If Playwright or Chromium is missing, verification cannot proceed — report this and stop.**
+**If Playwright or Chromium is missing, verifier must FAIL — browser automation step cannot be skipped.**
 
 ---
 

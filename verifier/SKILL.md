@@ -122,7 +122,9 @@ You receive a Verification Plan and execute it **EXACTLY as written**:
 2. **Run the build** — broken build = automatic FAIL
 3. **Run the test suite** — failing tests = automatic FAIL
 4. Run linters/type-checkers:
-   - **Go**: `which revive || go install github.com/mgechev/revive@latest` → `revive ./...` — must pass, no violations allowed
+   - **Go** (优先): `which revive || go install github.com/mgechev/revive@latest` → `revive ./...` — must pass, no violations allowed
+   - **Go** (备选): `which golangci-lint || go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest` → `golangci-lint run ./...` — 仅在 revive 不可用时使用
+   - **Mandatory**: If both revive and golangci-lint are unavailable (`which` returns empty and `go install` also fails), verifier must FAIL — lint step cannot be skipped
    - **Other languages**: eslint, tsc, mypy, etc.
 5. Check for regressions
 
