@@ -16,6 +16,23 @@ description: This skill provides comprehensive coding standards for Go backend a
 1. **Forbidden words**: `probably...`, `likely...`, `usually...`, `typically...` — no speculative language
 2. **Forbidden targeting**: Do not search specific modules (e.g., logger, config) unless driven by Phase 1 results
 3. **No early conclusions**: Do not output any conclusive or analytical statements before completing the full scan
+4. **No reverse questioning**: Do not ask the user "could you confirm...", "is this redundant...", "does this depend on...". Your job is to give conclusions, not ask humans for conclusions.
+5. **No pending items**: Do not mark uncertain cases (e.g., lifecycle, concurrent nil) as "to be verified" or "pending confirmation". Resolve them through code analysis.
+
+### Complex State Determination Protocol (Mandatory for Dynamic State Questions)
+
+When encountering state questions like "could `ws.handler` be nil after connection is established", you MUST execute the following instead of asking the user:
+
+1. **Trace to constructor**: Use tools to read the struct's initialization function (e.g., `NewXXX()`) and confirm initial assignment.
+2. **Global scan for modification points**: Use regex search to find all assignments to that field (e.g., `ws.handler =`), especially nil assignments (`= nil`).
+3. **Guilty until proven innocent**: If no clear nil assignment is found in steps 1-2, conclude "lifecycle-immutable, marked as redundant". Do not assume "there may be external black-box modifications".
+
+**Invalid output (never produce):**
+- ❌ "Pending verification: depends on whether handler guarantees non-nil throughout the connection lifecycle..."
+- ❌ "Could you confirm if ws.handler becomes nil after connection is established?"
+
+**Valid output (must produce):**
+- ✅ "【State Tracking】Traced to `NewBinanceWS()` initial assignment. Global search found no `ws.handler = nil` reset logic. Applying guilty-until-proven-innocent principle, marking all 11 checks in binance_ws.go as 【Redundant】."
 
 ## Overview
 
