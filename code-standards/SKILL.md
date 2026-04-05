@@ -11,6 +11,12 @@ description: This skill provides comprehensive coding standards for Go backend a
 **Core Principle**: Data-driven, no bias. Absolutely prohibit "assume-then-verify" search patterns.
 **Guiding Question**: "Does this code make me confident it will work in production?" — if not, dig deeper.
 
+### Absolute Prohibitions (Trigger = Immediate Failure)
+
+1. **Forbidden words**: `probably...`, `likely...`, `usually...`, `typically...` — no speculative language
+2. **Forbidden targeting**: Do not search specific modules (e.g., logger, config) unless driven by Phase 1 results
+3. **No early conclusions**: Do not output any conclusive or analytical statements before completing the full scan
+
 ## Overview
 
 This skill provides **progressive** coding standards for Go backend and Vue 3 + TypeScript frontend development. Standards are organized into 4 levels, from minimal core rules to complete reference material.
@@ -47,12 +53,6 @@ Review Scope:
 ```
 
 ### Step 2: Inspection Process
-
-#### Absolute Prohibitions (Trigger = Immediate Failure)
-
-1. **Forbidden words**: `probably...`, `likely...`, `usually...`, `typically...` — no speculative language
-2. **Forbidden targeting**: Do not search specific modules (e.g., logger, config) unless driven by Phase 1 results below
-3. **No early conclusions**: Do not output any conclusive or analytical statements before completing the full scan
 
 #### Phase 1: Full Blind Scan
 
