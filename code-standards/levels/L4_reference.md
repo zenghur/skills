@@ -16,7 +16,7 @@
 |----------|------|-----------------|
 | Business logic | Backend owns ALL business logic | [L1 Rule 1](../levels/L1_minimal.md#1-backend-owns-business-logic-cot-required) |
 | Goroutines | Never use `go` keyword directly | [L3 §2.1](../levels/L3_advanced.md#21-goroutine-safety-rules) |
-| Errors | Use `errors.Is()` and `errors.As()` | [L2 §2.4](../levels/L2_common.md#24-no-redundant-nil-checks) |
+| Errors | Use `errors.Is()` and `errors.As()` | [L1 Rule 4](../levels/L1_minimal.md#4-use-errorsis-for-error-comparison-cot-required) |
 | Zero-value | Functions returning error follow zero-value pattern | [L2 §2.1](../levels/L2_common.md#21-zero-value-pattern) |
 | GORM | Explicit `gorm:"column:field_name"` tags | [L1 Rule 9](../levels/L1_minimal.md#9-gorm-explicit-column-tags-cot-required) |
 | GORM | No index/uniqueIndex tags, NOT NULL constraints | [L2 §3](../levels/L2_common.md#3-database-standards-gorm) |
@@ -28,7 +28,7 @@
 | Nil checks | No redundant nil checks for initialized deps | [L2 §2.4](../levels/L2_common.md#24-no-redundant-nil-checks) |
 | Refactoring | Preserve all features, incremental steps | [L3 §4](../levels/L3_advanced.md#4-refactoring) |
 | Code quality | Single responsibility, cyclomatic complexity ≤15 | [L3 §3.1](../levels/L3_advanced.md#31-control-complexity) |
-| Code quality | No mock data, TODO/FIXME in production | [L1 Rule 1](../levels/L1_minimal.md#1-backend-owns-business-logic-cot-required) |
+| Code quality | No mock data, TODO/FIXME in production | [L1 Rule 11](../levels/L1_minimal.md#11-production-grade-code-cot-required) |
 | Tests | Unit tests, regression tests for bug fixes | [L2 §7](../levels/L2_common.md#7-testing-standards) |
 | Comments | Comments explain "why" not "how" | [L2 §4](../levels/L2_common.md#4-comments) |
 | Format | gofmt + goimports + go vet before commit | [L1 Rule 10](../levels/L1_minimal.md#10-pre-commit-format-lint-vet-cot-required) |
@@ -49,7 +49,7 @@
 | TypeScript | Strict mode, no `any` types | [L2 §12](../levels/L2_common.md#12-frontend-standards) |
 | Pinia | Global state only, no business logic | [L2 §12](../levels/L2_common.md#12-frontend-standards) |
 | Data | Timestamps formatted via utility, not computed | [L1 Rule 8](../levels/L1_minimal.md#8-frontend-no-business-logic-pure-calculations-ok-cot-required) |
-| Production | No mock data, TODO/FIXME placeholders | [L1 Rule 1](../levels/L1_minimal.md#1-backend-owns-business-logic-cot-required) |
+| Production | No mock data, TODO/FIXME placeholders | [L1 Rule 11](../levels/L1_minimal.md#11-production-grade-code-cot-required) |
 | Security | No tokens/keys in localStorage (use HttpOnly cookies) | [L4 §5 (XSS)](../levels/L4_reference.md#5-xss-prevention) |
 | Security | No v-html with user data (use v-text) | [L4 §5 (XSS)](../levels/L4_reference.md#5-xss-prevention) |
 | Security | External URLs validated against allowlist | [L4 §5 (XSS)](../levels/L4_reference.md#5-xss-prevention) |
@@ -84,12 +84,12 @@
 | Check | Canonical Source |
 |-------|-----------------|
 | Naming: verb prefix, camelCase, no magic values | [L1 Rule 2, Rule 6](../levels/L1_minimal.md) |
-| Error handling: errors.Is(), zero-value pattern | [L2 §2.1, §2.4](../levels/L2_common.md#2-error-handling) |
+| Error handling: errors.Is(), zero-value pattern | [L1 Rule 4](../levels/L1_minimal.md#4-use-errorsis-for-error-comparison-cot-required), [L2 §2.1](../levels/L2_common.md#21-zero-value-pattern) |
 | Business logic in backend only | [L1 Rule 1](../levels/L1_minimal.md#1-backend-owns-business-logic-cot-required) |
 | gofmt + go vet + revive before commit | [L1 Rule 10](../levels/L1_minimal.md#10-pre-commit-format-lint-vet-cot-required) |
 | Comments explain "why" not "how" | [L2 §4](../levels/L2_common.md#4-comments) |
 | Functions: single responsibility, ≤15 complexity | [L3 §3.1](../levels/L3_advanced.md#31-control-complexity) |
-| No mock data, TODO/FIXME placeholders | [L1 Rule 1](../levels/L1_minimal.md#1-backend-owns-business-logic-cot-required) |
+| No mock data, TODO/FIXME placeholders | [L1 Rule 11](../levels/L1_minimal.md#11-production-grade-code-cot-required) |
 
 > **[@CoT-required]**: Before checking items, execute LLM-Review-Process Step 1 (Rule Localization) to identify which checklist items apply to this review.
 

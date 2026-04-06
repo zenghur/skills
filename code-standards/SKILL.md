@@ -125,7 +125,7 @@ These principles are detailed in specific levels. See canonical sources:
 |----------|-----------------|
 | Backend owns business logic | [L1 Rule 1](levels/L1_minimal.md#1-backend-owns-business-logic-cot-required) |
 | SafeGo for goroutines | [L3 §2.1](levels/L3_advanced.md#21-goroutine-safety-rules) |
-| errors.Is() for error comparison | [L2 §2.4](levels/L2_common.md#24-no-redundant-nil-checks) |
+| errors.Is() for error comparison | [L2 §2.1–§2.3](levels/L2_common.md#2-error-handling) |
 | Zero-value pattern | [L2 §2.1](levels/L2_common.md#21-zero-value-pattern) |
 | GORM explicit column tags | [L1 Rule 9](levels/L1_minimal.md#9-gorm-explicit-column-tags-cot-required) |
 | Structured logging | [L2 §5](levels/L2_common.md#5-logging) |
@@ -133,6 +133,8 @@ These principles are detailed in specific levels. See canonical sources:
 | DDD patterns | [L3 §1](levels/L3_advanced.md#1-ddd-architecture) |
 | Code smells | [L3 §5](levels/L3_advanced.md#5-code-smells) |
 | Performance optimization | [L3 §6](levels/L3_advanced.md#6-performance-optimization) |
+| Production-grade code (no mock/TODO) | [L1 Rule 11](levels/L1_minimal.md#11-production-grade-code-cot-required) |
+| **Boy Scout Rule** | No canonical source — applies universally. Leave code cleaner than you found it. |
 
 For detailed code examples, see [Code Examples](references/code_examples.md).
 For philosophical background, see [Foundations](references/01_foundations.md).

@@ -63,7 +63,7 @@ func FindUser(id string) (*User, error) {
 
 ## 4. Use errors.Is() for Error Comparison [@CoT-required]
 
-> **Canonical source**: [L2 §2.4](L2_common.md#24-no-redundant-nil-checks) — detailed patterns including zero-value pattern and error wrapping
+> **Canonical source**: [L2 §2.1–§2.3](L2_common.md#2-error-handling) — error wrapping and zero-value patterns detailed in L2
 
 Never use `==` to compare errors. Use `errors.Is()` or `errors.As()`.
 
@@ -172,6 +172,45 @@ go vet ./...
 revive ./...
 ```
 
+## 11. Production-Grade Code [@CoT-required]
+
+> **Canonical source**: [L3 §4 Refactoring](../levels/L3_advanced.md#4-refactoring) — detailed patterns
+
+Never ship incomplete or placeholder code:
+
+```go
+// ❌ Bad: Placeholder implementation
+func GetUser(id string) (*User, error) {
+    return nil, errors.New("TODO: implement")  // Never defer implementation
+}
+
+// ❌ Bad: Mock data in production
+var mockUsers = []*User{{Name: "test"}}  // Test data in production code
+
+// ❌ Bad: Stub function
+func ProcessPayment(amount int) error {
+    return nil  // No-op — will silently fail
+}
+
+// ✅ Good: Complete implementation
+func GetUser(ctx context.Context, id string) (*User, error) {
+    var user User
+    if err := db.WithContext(ctx).First(&user, id).Error; err != nil {
+        return nil, fmt.Errorf("get user %s: %w", id, err)
+    }
+    return &user, nil
+}
+```
+
+**Rules:**
+- No "TODO", "FIXME", or placeholder comments — either implement now or create a tracked issue
+- No mock data, stub functions, or placeholder implementations in production code
+- All functions must have complete, working implementations
+- Test mocks are only allowed in test files (`_test.go`)
+- Every feature must be fully implemented with proper error handling — no "quick fixes"
+
+**Why**: Incomplete code accumulates technical debt and causes production incidents. If you ship it broken, you'll fix it under pressure later — at higher cost.
+
 ---
 
 ## TL;DR Checklist (for quick reference)
@@ -186,3 +225,4 @@ revive ./...
 - [ ] Frontend only displays, doesn't calculate
 - [ ] GORM explicit column tags
 - [ ] gofmt + go vet + revive before commit
+- [ ] No mock data, TODO/FIXME, or placeholder code
