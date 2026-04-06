@@ -63,7 +63,7 @@ Use this skill based on your scenario. Each level extends the previous:
 
 ---
 
-## LLM Review Operation Flow (Mandatory)
+## Review Operation Flow (Mandatory)
 
 **Applies to**: All code review, PR review, security audit, and refactoring verification.
 

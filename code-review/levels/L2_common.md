@@ -10,7 +10,7 @@
 
 ### 1.1 Basic Naming Rules
 
-> **[@CoT-required]**: When reviewing naming conventions, execute LLM-Review-Process Step 1-3 before giving conclusions.
+> **[@CoT-required]**: When reviewing naming conventions, execute Review Process Step 1-3 before giving conclusions.
 
 - **Internal interface data**: Use camelCase
 - **External system integration**: Use field names as-is from external system
@@ -79,7 +79,7 @@ func GetUserData() { ... }
 
 ### 2.1 Zero-Value Pattern
 
-> **[@CoT-required]**: When reviewing error handling, execute LLM-Review-Process Step 1-3 before giving conclusions.
+> **[@CoT-required]**: When reviewing error handling, execute Review Process Step 1-3 before giving conclusions.
 
 When a function returns (value, error) and error is not nil, other returns must be zero values:
 
@@ -232,7 +232,7 @@ func Process(user *User) error {
 
 ### 3.1 Field Tags
 
-> **[@CoT-required]**: When reviewing database standards, execute LLM-Review-Process Step 1-3 before giving conclusions.
+> **[@CoT-required]**: When reviewing database standards, execute Review Process Step 1-3 before giving conclusions.
 
 - Every field must have explicit `gorm:"column:field_name"`
 - Never use `index` or `uniqueIndex` tags
@@ -275,7 +275,7 @@ Raw SQL allowed only for:
 
 ### 4.1 Logger Usage
 
-> **[@CoT-required]**: When reviewing logging standards, execute LLM-Review-Process Step 1-3 before giving conclusions.
+> **[@CoT-required]**: When reviewing logging standards, execute Review Process Step 1-3 before giving conclusions.
 
 Use wrapped logger instance. NEVER use raw `fmt.Println` or `log.Println`.
 
@@ -338,7 +338,7 @@ Use appropriately:
 
 ### 6.1 Core Principles
 
-> **[@CoT-required]**: When reviewing comments, execute LLM-Review-Process Step 1-3 before giving conclusions.
+> **[@CoT-required]**: When reviewing comments, execute Review Process Step 1-3 before giving conclusions.
 
 - Comments are a remedy, not a default
 - Code should express intent; comments explain **why**, not **what**
@@ -397,7 +397,7 @@ func CreateUser(name, email string) (*User, error) { ... }
 
 Handle exceptional cases first with early returns:
 
-> **[@CoT-required]**: When reviewing guard clauses, execute LLM-Review-Process Step 1-3 before giving conclusions.
+> **[@CoT-required]**: When reviewing guard clauses, execute Review Process Step 1-3 before giving conclusions.
 
 ```go
 // ❌ Bad: Deep nesting
@@ -438,7 +438,7 @@ func ProcessOrder(order *Order) error {
 
 ### 8.1 Vertical Formatting
 
-> **[@CoT-required]**: When reviewing code formatting, execute LLM-Review-Process Step 1-3 before giving conclusions.
+> **[@CoT-required]**: When reviewing code formatting, execute Review Process Step 1-3 before giving conclusions.
 
 Top-down: high-level logic first, private helpers last:
 
@@ -500,7 +500,7 @@ revive ./...     # Linting
 
 ### 9.1 Sync with Code Changes
 
-> **[@CoT-required]**: When reviewing test synchronization, execute LLM-Review-Process Step 1-3 before giving conclusions.
+> **[@CoT-required]**: When reviewing test synchronization, execute Review Process Step 1-3 before giving conclusions.
 
 - When modifying code, update tests simultaneously
 - New features require test cases before merge
@@ -573,7 +573,7 @@ testdata/                        # Test fixtures (Go convention)
 
 ### 9.5 Coverage Requirements
 
-> **[@CoT-required]**: When reviewing test coverage, execute LLM-Review-Process Step 1-3 before giving conclusions.
+> **[@CoT-required]**: When reviewing test coverage, execute Review Process Step 1-3 before giving conclusions.
 
 #### Coverage Thresholds
 
@@ -775,7 +775,7 @@ type UserResponse struct {
 
 ### 12.1 No Business Logic, Pure Calculations Allowed
 
-> **[@CoT-required]**: When reviewing frontend standards, execute LLM-Review-Process Step 1-3 before giving conclusions.
+> **[@CoT-required]**: When reviewing frontend standards, execute Review Process Step 1-3 before giving conclusions.
 
 Frontend must NOT contain business logic (rules, validation, complex data transformation).
 Pure data calculations are allowed if data is already provided by backend

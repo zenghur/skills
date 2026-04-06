@@ -35,7 +35,7 @@
 | Comments | Comments explain "why" not "how" | [L2 §6](../levels/L2_common.md#6-comments) |
 | Format | gofmt + goimports + go vet before commit | [L1 Rule 10](../levels/L1_minimal.md#10-pre-commit-format-lint-vet-cot-required) |
 
-> **[@CoT-required]**: Before checking items, execute LLM-Review-Process Step 1 (Rule Localization) to identify which checklist items apply to this review.
+> **[@CoT-required]**: Before checking items, execute Review Process Step 1 (Rule Localization) to identify which checklist items apply to this review.
 
 ---
 
@@ -57,13 +57,13 @@
 | Security | External URLs validated against allowlist | [L4 §5 (XSS)](../levels/L4_reference.md#5-xss-prevention) |
 | Security | CSP headers configured | [L4 §5 (CSP)](../levels/L4_reference.md#5-xss-prevention) |
 
-> **[@CoT-required]**: Before checking items, execute LLM-Review-Process Step 1 (Rule Localization) to identify which checklist items apply to this review.
+> **[@CoT-required]**: Before checking items, execute Review Process Step 1 (Rule Localization) to identify which checklist items apply to this review.
 
 ---
 
 ## Code Review Checklist (Summary)
 
-> **Note**: This checklist summarizes review checkpoints. Apply the LLM Review Operation Flow (three-phase: Full Blind Scan → Structured Grouping → Rule-Anchored Analysis) for systematic review.
+> **Note**: This checklist summarizes review checkpoints. Apply the Review Operation Flow (three-phase: Full Blind Scan → Structured Grouping → Rule-Anchored Analysis) for systematic review.
 
 | Review Type | Key Questions | Canonical Source |
 |-------------|---------------|-----------------|
@@ -75,7 +75,7 @@
 | Tests | Coverage adequate? Regression tests for bug fixes? | [L2 §9](../levels/L2_common.md#9-test-synchronization) |
 | Refactoring | Features preserved? Incremental steps? | [L3 §4](../levels/L3_advanced.md#4-refactoring) |
 
-> **[@CoT-required]**: Before checking items, execute LLM-Review-Process Step 1 (Rule Localization) to identify which checklist items apply to this review.
+> **[@CoT-required]**: Before checking items, execute Review Process Step 1 (Rule Localization) to identify which checklist items apply to this review.
 
 ---
 
@@ -93,7 +93,7 @@
 | Functions: single responsibility, ≤15 complexity | [L3 §3.1](../levels/L3_advanced.md#31-control-complexity) |
 | No mock data, TODO/FIXME placeholders | [L1 Rule 11](../levels/L1_minimal.md#11-production-grade-code-cot-required) |
 
-> **[@CoT-required]**: Before checking items, execute LLM-Review-Process Step 1 (Rule Localization) to identify which checklist items apply to this review.
+> **[@CoT-required]**: Before checking items, execute Review Process Step 1 (Rule Localization) to identify which checklist items apply to this review.
 
 ---
 

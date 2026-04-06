@@ -10,7 +10,7 @@
 
 ### 1.1 Layered Structure
 
-> **[@CoT-required]**: When reviewing DDD architecture, execute LLM-Review-Process Step 1-3 before giving conclusions.
+> **[@CoT-required]**: When reviewing DDD architecture, execute Review Process Step 1-3 before giving conclusions.
 
 Strictly follow Domain-Driven Design layering:
 
@@ -89,7 +89,7 @@ func (r *PostgresUserRepository) FindByID(ctx context.Context, id string) (*User
 
 ### 2.1 Goroutine Safety Rules
 
-> **[@CoT-required]**: When reviewing goroutine and concurrency safety, execute LLM-Review-Process Step 1-3 before giving conclusions.
+> **[@CoT-required]**: When reviewing goroutine and concurrency safety, execute Review Process Step 1-3 before giving conclusions.
 
 **PROHIBITED**: Never use `go` keyword directly.
 
@@ -217,7 +217,7 @@ func Pipeline(ctx context.Context, input <-chan int) <-chan string {
 
 ### 3.1 Control Complexity
 
-> **[@CoT-required]**: When reviewing function design, execute LLM-Review-Process Step 1-3 before giving conclusions.
+> **[@CoT-required]**: When reviewing function design, execute Review Process Step 1-3 before giving conclusions.
 
 Focus on cyclomatic complexity, not line count.
 
@@ -374,7 +374,7 @@ func SetUserAge(user *User, age int) {
 
 ### 4.1 Feature Preservation
 
-> **[@CoT-required]**: When reviewing refactoring, execute LLM-Review-Process Step 1-3 before giving conclusions.
+> **[@CoT-required]**: When reviewing refactoring, execute Review Process Step 1-3 before giving conclusions.
 
 **CRITICAL**: Refactoring MUST preserve ALL existing functionality.
 
