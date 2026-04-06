@@ -7,7 +7,7 @@ description: This skill provides comprehensive code review guidelines for Go bac
 
 ## Overview
 
-This skill provides **progressive** standards for code review in Go backend and Vue 3 + TypeScript frontend development. Standards are organized into 4 levels, from minimal core rules to complete reference material.
+This skill provides **progressive** guidelines for Go backend and Vue 3 + TypeScript frontend code review. Content is organized into 4 levels, from minimal core rules to complete reference material.
 
 ## Role
 
