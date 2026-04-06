@@ -1,5 +1,5 @@
 ---
-name: code-standards
+name: code-review
 description: This skill provides comprehensive coding standards for Go backend and Vue 3 + TypeScript frontend projects. Use this skill when writing, reviewing, or refactoring code to ensure consistency, maintainability, and adherence to best practices. The skill emphasizes separation of concerns where backend handles all business logic and calculations, while frontend focuses solely on presentation.
 ---
 
@@ -50,7 +50,7 @@ Use this skill based on your scenario. Each level extends the previous:
 | DDD architecture, concurrent systems | [L1](levels/L1_minimal.md) + [L2](levels/L2_common.md) + [L3 Advanced](levels/L3_advanced.md) | DDD, Goroutines, Function Design, Refactoring, Code Smells |
 | Code review, security audit | [L4 Reference](levels/L4_reference.md) | Checklists (Backend, Frontend, Security) + Security Standards |
 | Refactoring existing code | [L3 §4](levels/L3_advanced.md#4-refactoring) | Refactoring Principles |
-| Complex nil/state questions | [SKILL.md Role](code-standards/SKILL.md#role) | Complex State Determination Protocol |
+| Complex nil/state questions | [SKILL.md Role](code-review/SKILL.md#role) | Complex State Determination Protocol |
 
 ### Level Summary
 
@@ -153,7 +153,7 @@ For quick LLM reference, see [Guidelines](references/02_guidelines.md).
 ## File Structure
 
 ```
-code-standards/
+code-review/
 ├── SKILL.md              # This file (main entry + layered index)
 ├── CLAUDE.md             # Claude Code project guidance
 ├── levels/
