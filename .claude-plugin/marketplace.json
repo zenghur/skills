@@ -9,15 +9,6 @@
       },
       "description": "Comprehensive coding standards for Go backend and Vue 3 + TypeScript frontend projects"
     },
-    {
-      "name": "frontend-design",
-      "source": {
-        "source": "git-subdir",
-        "url": "https://github.com/zenghur/skills",
-        "path": "frontend-design"
-      },
-      "description": "Frontend design guidelines and best practices"
-    }
   ],
   "owner": {
     "name": "zenghur"
