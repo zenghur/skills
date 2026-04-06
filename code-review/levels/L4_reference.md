@@ -1,4 +1,4 @@
-# Level 4: Reference — Checklists & Security Standards
+# Level 4: Reference �� Checklists & Security Standards
 
 > **When to read**: Code review, security audits, deep-dive scenarios
 > **Extends**: Level 1 + 2 + 3 rules
@@ -15,22 +15,24 @@
 | Category | Rule | Canonical Source |
 |----------|------|-----------------|
 | Business logic | Backend owns ALL business logic | [L1 Rule 1](../levels/L1_minimal.md#1-backend-owns-business-logic-cot-required) |
-| Goroutines | Never use `go` keyword directly | [L3 §2.1](../levels/L3_advanced.md#21-goroutine-safety-rules) |
+| Goroutines | Never use `go` keyword directly | [L3 ��2.1](../levels/L3_advanced.md#21-goroutine-safety-rules) |
 | Errors | Use `errors.Is()` and `errors.As()` | [L1 Rule 4](../levels/L1_minimal.md#4-use-errorsis-for-error-comparison-cot-required) |
-| Zero-value | Functions returning error follow zero-value pattern | [L2 §2.1](../levels/L2_common.md#21-zero-value-pattern) |
+| Zero-value | Functions returning error follow zero-value pattern | [L2 ��2.1](../levels/L2_common.md#21-zero-value-pattern) |
 | GORM | Explicit `gorm:"column:field_name"` tags | [L1 Rule 9](../levels/L1_minimal.md#9-gorm-explicit-column-tags-cot-required) |
-| GORM | No index/uniqueIndex tags, NOT NULL constraints | [L2 §3](../levels/L2_common.md#3-database-standards-gorm) |
+| GORM | No index/uniqueIndex tags, NOT NULL constraints | [L2 ��3](../levels/L2_common.md#3-database-standards-gorm) |
 | GORM | Use struct for updates, not map[string]interface{} | [L1 Rule 5](../levels/L1_minimal.md#5-prefer-struct-over-map-cot-required) |
-| Logging | Structured logging (InfoW/WarnW/ErrorW/DebugW) | [L2 §5](../levels/L2_common.md#5-logging) |
-| Logging | No fmt.Sprintf in log messages | [L2 §5](../levels/L2_common.md#5-logging) |
-| Timestamps | int64 UnixMilli for DB and API | [L2 §5](../levels/L2_common.md#5-timestamp-handling) |
+| Logging | Structured logging (InfoW/WarnW/ErrorW/DebugW) | [L2 ��5](../levels/L2_common.md#5-logging) |
+| Logging | No fmt.Sprintf in log messages | [L2 ��5](../levels/L2_common.md#5-logging) |
+| Timestamps | int64 UnixMilli for DB and API | [L2 ��5](../levels/L2_common.md#5-timestamp-handling) |
 | Naming | camelCase, verb prefix, no magic values | [L1 Rule 2](../levels/L1_minimal.md#2-function-naming-verb-prefix-cot-required) |
-| Nil checks | No redundant nil checks for initialized deps | [L2 §2.4](../levels/L2_common.md#24-no-redundant-nil-checks) |
-| Refactoring | Preserve all features, incremental steps | [L3 §4](../levels/L3_advanced.md#4-refactoring) |
-| Code quality | Single responsibility, cyclomatic complexity ≤15 | [L3 §3.1](../levels/L3_advanced.md#31-control-complexity) |
+| Nil checks | No redundant nil checks for initialized deps | [L2 ��2.4](../levels/L2_common.md#24-no-redundant-nil-checks) |
+| Refactoring | Preserve all features, incremental steps | [L3 ��4](../levels/L3_advanced.md#4-refactoring) |
+| Code quality | Single responsibility, cyclomatic complexity ��15 | [L3 ��3.1](../levels/L3_advanced.md#31-control-complexity) |
 | Code quality | No mock data, TODO/FIXME in production | [L1 Rule 11](../levels/L1_minimal.md#11-production-grade-code-cot-required) |
-| Tests | Unit tests, regression tests for bug fixes | [L2 §7](../levels/L2_common.md#7-testing-standards) |
-| Comments | Comments explain "why" not "how" | [L2 §4](../levels/L2_common.md#4-comments) |
+| Tests | Unit tests for new code, regression tests for bug fixes | [L2 ��9](../levels/L2_common.md#9-test-synchronization) |
+| Tests | Unit coverage ��70%, Integration ��50%, E2E ��30% | [L2 ��9.5](../levels/L2_common.md#95-coverage-requirements) |
+| Tests | Modified code must not decrease coverage | [L2 ��9.5](../levels/L2_common.md#95-coverage-requirements) |
+| Comments | Comments explain "why" not "how" | [L2 ��4](../levels/L2_common.md#4-comments) |
 | Format | gofmt + goimports + go vet before commit | [L1 Rule 10](../levels/L1_minimal.md#10-pre-commit-format-lint-vet-cot-required) |
 
 > **[@CoT-required]**: Before checking items, execute LLM-Review-Process Step 1 (Rule Localization) to identify which checklist items apply to this review.
@@ -45,15 +47,15 @@
 |----------|------|-----------------|
 | Business logic | No business logic in frontend | [L1 Rule 1](../levels/L1_minimal.md#1-backend-owns-business-logic-cot-required) |
 | Business logic | No complex calculations or data aggregation | [L1 Rule 8](../levels/L1_minimal.md#8-frontend-no-business-logic-pure-calculations-ok-cot-required) |
-| Vue | Vue 3 Composition API with `<script setup>` | [L2 §12](../levels/L2_common.md#12-frontend-standards) |
-| TypeScript | Strict mode, no `any` types | [L2 §12](../levels/L2_common.md#12-frontend-standards) |
-| Pinia | Global state only, no business logic | [L2 §12](../levels/L2_common.md#12-frontend-standards) |
-| Data | Timestamps formatted via utility, not computed | [L2 §5](../levels/L2_common.md#5-timestamp-handling) |
+| Vue | Vue 3 Composition API with `<script setup>` | [L2 ��12](../levels/L2_common.md#12-frontend-standards) |
+| TypeScript | Strict mode, no `any` types | [L2 ��12](../levels/L2_common.md#12-frontend-standards) |
+| Pinia | Global state only, no business logic | [L2 ��12](../levels/L2_common.md#12-frontend-standards) |
+| Data | Timestamps formatted via utility, not computed | [L2 ��5](../levels/L2_common.md#5-timestamp-handling) |
 | Production | No mock data, TODO/FIXME placeholders | [L1 Rule 11](../levels/L1_minimal.md#11-production-grade-code-cot-required) |
-| Security | No tokens/keys in localStorage (use HttpOnly cookies) | [L4 §5 (XSS)](../levels/L4_reference.md#5-xss-prevention) |
-| Security | No v-html with user data (use v-text) | [L4 §5 (XSS)](../levels/L4_reference.md#5-xss-prevention) |
-| Security | External URLs validated against allowlist | [L4 §5 (XSS)](../levels/L4_reference.md#5-xss-prevention) |
-| Security | CSP headers configured | [L4 §5 (CSP)](../levels/L4_reference.md#5-xss-prevention) |
+| Security | No tokens/keys in localStorage (use HttpOnly cookies) | [L4 ��5 (XSS)](../levels/L4_reference.md#5-xss-prevention) |
+| Security | No v-html with user data (use v-text) | [L4 ��5 (XSS)](../levels/L4_reference.md#5-xss-prevention) |
+| Security | External URLs validated against allowlist | [L4 ��5 (XSS)](../levels/L4_reference.md#5-xss-prevention) |
+| Security | CSP headers configured | [L4 ��5 (CSP)](../levels/L4_reference.md#5-xss-prevention) |
 
 > **[@CoT-required]**: Before checking items, execute LLM-Review-Process Step 1 (Rule Localization) to identify which checklist items apply to this review.
 
@@ -70,7 +72,7 @@
 | Security | Input validation? Injection protected? AuthZ? | [L4 Part B](../levels/L4_reference.md#part-b-security-standards) |
 | Business logic | Logic in backend only? | [L1 Rule 1](../levels/L1_minimal.md#1-backend-owns-business-logic-cot-required) |
 | Performance | Cyclomatic complexity ≤15? No hidden allocations? | [L3 §3.1](../levels/L3_advanced.md#31-control-complexity) |
-| Tests | Coverage adequate? Regression tests for bug fixes? | [L2 §7](../levels/L2_common.md#7-testing-standards) |
+| Tests | Coverage adequate? Regression tests for bug fixes? | [L2 §9](../levels/L2_common.md#9-test-synchronization) |
 | Refactoring | Features preserved? Incremental steps? | [L3 §4](../levels/L3_advanced.md#4-refactoring) |
 
 > **[@CoT-required]**: Before checking items, execute LLM-Review-Process Step 1 (Rule Localization) to identify which checklist items apply to this review.

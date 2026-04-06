@@ -4,10 +4,10 @@
 > — The Art of Unix Programming
 
 This is a **practical reference** for writing high-quality Go code. Each rule provides:
-- **What to do** (黑体规则)
-- **Why it matters** (原因)
-- **Correct example** (完整可执行)
-- **Incorrect example** (简短)
+- **What to do** (the rule)
+- **Why it matters** (rationale)
+- **Correct example** (complete and executable)
+- **Incorrect example** (concise)
 
 ---
 
