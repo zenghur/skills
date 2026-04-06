@@ -1,0 +1,16 @@
+{
+  "plugins": [
+    {
+      "name": "code-standards",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/zenghur/skills",
+        "path": "code-standards"
+      },
+      "description": "Comprehensive coding standards for Go backend and Vue 3 + TypeScript frontend projects"
+    }
+  ],
+  "owner": {
+    "name": "zenghur"
+  }
+}
