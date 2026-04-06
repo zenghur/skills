@@ -5,6 +5,10 @@ description: This skill provides comprehensive coding standards for Go backend a
 
 # Code Standards
 
+## Overview
+
+This skill provides **progressive** coding standards for Go backend and Vue 3 + TypeScript frontend development. Standards are organized into 4 levels, from minimal core rules to complete reference material.
+
 ## Role
 
 **Role**: Rigorous code auditor and quality guardian
@@ -35,28 +39,33 @@ When encountering state questions like "could `ws.handler` be nil after connecti
 - ✅ "【State Tracking】Traced to `NewHTTPClient()` — req initialized and body set once. Global search found no `req.body = nil` reset in handler. Applying guilty-until-proven-innocent principle, marking the nil check in handler.go:42 as 【Redundant】."
 - ✅ "【State Tracking】Traced to `net.Conn` — interface type, cannot guarantee non-nil. Cannot apply redundant-check rule. Kept as-is."
 
-## Overview
+## When to Use This Skill + Progressive Disclosure Levels
 
-This skill provides **progressive** coding standards for Go backend and Vue 3 + TypeScript frontend development. Standards are organized into 4 levels, from minimal core rules to complete reference material.
+Use this skill based on your scenario. Each level extends the previous:
 
-## When to Use This Skill
+| Scenario | Start With | Level Description |
+|----------|-----------|-------------------|
+| Simple tasks, CRUD, session start | [L1 Minimal](levels/L1_minimal.md) | 10 iron rules — covers 80% of daily development |
+| Writing a service, handler, component | [L1](levels/L1_minimal.md) + [L2 Common](levels/L2_common.md) | Naming, Error Handling, Database, Logging, Frontend |
+| DDD architecture, concurrent systems | [L1](levels/L1_minimal.md) + [L2](levels/L2_common.md) + [L3 Advanced](levels/L3_advanced.md) | DDD, Goroutines, Function Design, Refactoring, Code Smells |
+| Code review, security audit | [L4 Reference](levels/L4_reference.md) | Checklists (Backend, Frontend, Security) + Security Standards |
+| Refactoring existing code | [L3 §4](levels/L3_advanced.md#4-refactoring) | Refactoring Principles |
+| Complex nil/state questions | [SKILL.md Role](code-standards/SKILL.md#role) | Complex State Determination Protocol |
 
-Use this skill when:
-- Writing new code (backend or frontend)
-- Refactoring existing code
-- Reviewing pull requests
-- Fixing code quality issues
-- Setting up database models (backend)
-- Implementing DDD architecture layers (backend)
-- Creating Vue components (frontend)
-- Managing application state (frontend)
+### Level Summary
+
+**Level 1**: 10 core rules (backend owns logic, errors as return values, SafeGo, etc.)
+**Level 2**: Daily development rules (naming, error handling, database, logging, frontend)
+**Level 3**: Complex architecture (DDD, concurrency, function design, refactoring, performance)
+**Level 4**: Quick reference checklists for audit — all rules summarized with links to canonical sources
+
+> **Note**: L4 checklists are summaries, not new rules. Each item links to its canonical source in L1/L2/L3.
 
 ---
 
 ## LLM Review Operation Flow (Mandatory)
 
 **Applies to**: All code review, PR review, security audit, and refactoring verification.
-**Core Principle**: Data-driven, no bias. Absolutely prohibit "assume-then-verify" search patterns.
 
 Before giving any conclusion or suggestion, you MUST follow this three-step chain of thought:
 
@@ -108,81 +117,26 @@ Recommendation: [If applicable, must derive naturally from Step 2 findings]
 
 ---
 
-## Progressive Disclosure Levels
+## Core Principles (Summary Index)
 
-### [Level 1: Minimal](levels/L1_minimal.md) — 10 Core Rules
+These principles are detailed in specific levels. See canonical sources:
 
-**When**: Session start, simple tasks (CRUD, small functions)
+| Principle | Canonical Location |
+|----------|-----------------|
+| Backend owns business logic | [L1 Rule 1](levels/L1_minimal.md#1-backend-owns-business-logic-cot-required) |
+| SafeGo for goroutines | [L3 §2.1](levels/L3_advanced.md#21-goroutine-safety-rules) |
+| errors.Is() for error comparison | [L2 §2.4](levels/L2_common.md#24-no-redundant-nil-checks) |
+| Zero-value pattern | [L2 §2.1](levels/L2_common.md#21-zero-value-pattern) |
+| GORM explicit column tags | [L1 Rule 9](levels/L1_minimal.md#9-gorm-explicit-column-tags-cot-required) |
+| Structured logging | [L2 §5](levels/L2_common.md#5-logging) |
+| Refactoring principles | [L3 §4](levels/L3_advanced.md#4-refactoring) |
+| DDD patterns | [L3 §1](levels/L3_advanced.md#1-ddd-architecture) |
+| Code smells | [L3 §5](levels/L3_advanced.md#5-code-smells) |
+| Performance optimization | [L3 §6](levels/L3_advanced.md#6-performance-optimization) |
 
-The 10 iron rules covering 80% of daily development scenarios.
-
-### [Level 2: Common](levels/L2_common.md) — Daily Development
-
-**When**: Normal feature development (writing a service, handler, component)
-
-Extends Level 1 with: Naming, Error Handling, Database, Logging, Comments, Guard Clauses, Testing, Code Formatting.
-
-### [Level 3: Advanced](levels/L3_advanced.md) — Complex Architecture
-
-**When**: Complex architecture design, DDD implementation, concurrent systems
-
-Extends Level 1+2 with: DDD Architecture, Goroutine & Concurrency Safety, Function Design, Refactoring Principles, Code Smells, Performance Optimization.
-
-### [Level 4: Reference](levels/L4_reference.md) — Complete Checklists & Security
-
-**When**: Code review, security audits, deep-dive scenarios
-
-Complete checklists (Backend, Frontend, Security, Daily, Code Review) + complete Security Standards (Defense in Depth, Input Validation, Authentication, Cryptography, XSS, CSRF, RBAC, TLS, Memory Safety, Audit Logging).
-
----
-
-## Quick Access
-
-| Scenario | Start With |
-|----------|-----------|
-| Simple CRUD | [L1 Minimal](levels/L1_minimal.md) |
-| Write a service | [L1](levels/L1_minimal.md) + [L2 Common](levels/L2_common.md) |
-| Design DDD architecture | [L1](levels/L1_minimal.md) + [L2](levels/L2_common.md) + [L3 Advanced](levels/L3_advanced.md) |
-| Code review | [L4 Reference](levels/L4_reference.md) (Checklists) |
-| Security audit | [L4 Reference](levels/L4_reference.md) (Security Standards) |
-| All content | Read all levels in order |
-
----
-
-## Core Principles
-
-These principles underpin all levels:
-
-### Separation of Concerns
-- **Backend**: Handles ALL business logic, calculations, and complex data aggregation
-- **Frontend**: No business logic, can do pure data calculations on data already received
-- **No Business Logic in Frontend**: Frontend must not contain rules, decisions, or business logic
-- **Backend Trust**: Frontend trusts backend to provide all necessary data in ready-to-display format
-
-### Production-Grade Code
-- **No Mock Data**: Never use mock data, mock functions, or placeholder implementations in production code
-- **No Stub Functions**: All functions must have complete, working implementations
-- **No TODO Placeholders**: No "TODO", "FIXME", or placeholder code that defers implementation
-- **No Temporary Solutions**: Every piece of code must be production-ready, not a quick fix or workaround
-- **Complete Implementation**: All features must be fully implemented with proper error handling
-- **Testable Code**: Code must be written with testing in mind, but test mocks are only allowed in test files
-
-### Code Quality Standards
-- **Readability**: Code should clearly express intent without excessive reliance on comments
-- **Maintainability**: Easy to modify and extend
-- **Testability**: Code should be easy to write unit tests for
-
-### Boy Scout Rule
-Leave the code cleaner than you found it. Every commit should improve the codebase - even small improvements like renaming a variable or extracting a long function count as progress.
-
-### Refactoring Principles
-- **Feature Preservation**: Refactoring MUST preserve ALL existing functionality - no features should be lost
-- **Behavior Equivalence**: After refactoring, the system must behave identically to before
-- **No Silent Removals**: Never remove functionality during refactoring without explicit requirement
-- **Feature Inventory**: Before refactoring, list all existing features to ensure none are missed
-- **Verification Required**: After refactoring, verify each feature still works correctly
-- **Incremental Refactoring**: Large refactorings should be broken into smaller, verifiable steps
-- **Rollback Ready**: Keep the ability to rollback if issues are discovered post-refactoring
+For detailed code examples, see [Code Examples](references/code_examples.md).
+For philosophical background, see [Foundations](references/01_foundations.md).
+For quick LLM reference, see [Guidelines](references/02_guidelines.md).
 
 ---
 

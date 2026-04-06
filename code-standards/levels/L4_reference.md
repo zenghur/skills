@@ -8,167 +8,90 @@
 
 # Part A: Checklists
 
-## Backend Checklist
+## Backend Checklist (Summary)
+
+> **Note**: This checklist summarizes rules from L1/L2/L3. Each item links to its canonical source.
+
+| Category | Rule | Canonical Source |
+|----------|------|-----------------|
+| Business logic | Backend owns ALL business logic | [L1 Rule 1](../levels/L1_minimal.md#1-backend-owns-business-logic-cot-required) |
+| Goroutines | Never use `go` keyword directly | [L3 §2.1](../levels/L3_advanced.md#21-goroutine-safety-rules) |
+| Errors | Use `errors.Is()` and `errors.As()` | [L2 §2.4](../levels/L2_common.md#24-no-redundant-nil-checks) |
+| Zero-value | Functions returning error follow zero-value pattern | [L2 §2.1](../levels/L2_common.md#21-zero-value-pattern) |
+| GORM | Explicit `gorm:"column:field_name"` tags | [L1 Rule 9](../levels/L1_minimal.md#9-gorm-explicit-column-tags-cot-required) |
+| GORM | No index/uniqueIndex tags, NOT NULL constraints | [L2 §3](../levels/L2_common.md#3-database-standards-gorm) |
+| GORM | Use struct for updates, not map[string]interface{} | [L1 Rule 5](../levels/L1_minimal.md#5-prefer-struct-over-map-cot-required) |
+| Logging | Structured logging (InfoW/WarnW/ErrorW/DebugW) | [L2 §5](../levels/L2_common.md#5-logging) |
+| Logging | No fmt.Sprintf in log messages | [L2 §5](../levels/L2_common.md#5-logging) |
+| Timestamps | int64 UnixMilli for DB and API | [L1 Rule 10](../levels/L1_minimal.md#10-pre-commit-format-lint-vet-cot-required) |
+| Naming | camelCase, verb prefix, no magic values | [L1 Rule 2](../levels/L1_minimal.md#2-function-naming-verb-prefix-cot-required) |
+| Nil checks | No redundant nil checks for initialized deps | [L2 §2.4](../levels/L2_common.md#24-no-redundant-nil-checks) |
+| Refactoring | Preserve all features, incremental steps | [L3 §4](../levels/L3_advanced.md#4-refactoring) |
+| Code quality | Single responsibility, cyclomatic complexity ≤15 | [L3 §3.1](../levels/L3_advanced.md#31-control-complexity) |
+| Code quality | No mock data, TODO/FIXME in production | [L1 Rule 1](../levels/L1_minimal.md#1-backend-owns-business-logic-cot-required) |
+| Tests | Unit tests, regression tests for bug fixes | [L2 §7](../levels/L2_common.md#7-testing-standards) |
+| Comments | Comments explain "why" not "how" | [L2 §4](../levels/L2_common.md#4-comments) |
+| Format | gofmt + goimports + go vet before commit | [L1 Rule 10](../levels/L1_minimal.md#10-pre-commit-format-lint-vet-cot-required) |
 
 > **[@CoT-required]**: Before checking items, execute LLM-Review-Process Step 1 (Rule Localization) to identify which checklist items apply to this review.
-
-- [ ] Interface fields use camelCase
-- [ ] All fields have explicit `gorm:"column:field_name"` tag
-- [ ] No index/uniqueIndex tags in gorm struct
-- [ ] DDL fields all have NOT NULL constraint
-- [ ] Use struct model for gorm updates, not map[string]interface{}
-- [ ] No raw SQL for CRUD operations, use gorm model methods
-- [ ] Do not print sensitive information
-- [ ] Use English logs with wrapped logger instance (NEVER use `fmt.Println`, `log.Println`, etc.)
-- [ ] Use structured logging (`InfoW`, `WarnW`, `ErrorW`, `DebugW`)
-- [ ] Log keys use camelCase naming
-- [ ] No `fmt.Sprintf` or string concatenation in log messages
-- [ ] Database fields use int64 timestamps
-- [ ] API responses use int64 timestamps
-- [ ] Business logic in domain layer
-- [ ] No duplicate code blocks
-- [ ] No magic numbers and magic strings
-- [ ] Prefer struct over map[string]interface{} for known fields
-- [ ] No redundant nil checks for initialized dependencies
-- [ ] Dependencies initialized at startup, not checked repeatedly
-- [ ] Compiles successfully and passes lint
-- [ ] Functions returning error follow zero-value pattern
-- [ ] Use `errors.Is()` for error comparison (NEVER use `==`)
-- [ ] Use `errors.As()` for error type assertion
-- [ ] All calculations are performed in backend
-- [ ] Data is aggregated before sending to frontend
-- [ ] No direct `go` keyword usage, use `goroutine.SafeGo` or `goroutine.SafeGoWithContext`
-- [ ] No mock data or placeholder implementations
-- [ ] No TODO/FIXME placeholders in production code
-- [ ] Comments accurately describe current code behavior
-- [ ] No outdated or misleading comments
-- [ ] Public functions have documentation comments
-- [ ] Test cases updated when code changes
-- [ ] New features have corresponding test cases
-- [ ] Bug fixes include regression tests
-- [ ] Guard clauses used to handle exceptions first
-- [ ] Early returns reduce nesting levels
-- [ ] Code structure is flat and readable
-- [ ] All existing features documented before refactoring
-- [ ] Feature checklist created and verified after refactoring
-- [ ] No functionality lost during refactoring
-- [ ] Edge cases and error handling verified post-refactoring
-- [ ] Security features preserved during refactoring
-- [ ] Functions have controlled complexity (cyclomatic complexity ≤15)
-- [ ] Functions have single responsibility
-- [ ] Function parameters reasonable (≤5 acceptable, 6+ consider struct/option pattern)
-- [ ] No hidden side effects in functions
-- [ ] Commands separated from queries
-- [ ] Code formatted with gofmt/goimports
-- [ ] Package structure follows standard layout
-- [ ] Avoid unnecessary memory allocations
-- [ ] Recognized and addressed code smells
 
 ---
 
-## Frontend Checklist
+## Frontend Checklist (Summary)
+
+> **Note**: This checklist summarizes rules from L1/L2. Each item links to its canonical source.
+
+| Category | Rule | Canonical Source |
+|----------|------|-----------------|
+| Business logic | No business logic in frontend | [L1 Rule 1](../levels/L1_minimal.md#1-backend-owns-business-logic-cot-required) |
+| Business logic | No complex calculations or data aggregation | [L1 Rule 8](../levels/L1_minimal.md#8-frontend-no-business-logic-pure-calculations-ok-cot-required) |
+| Vue | Vue 3 Composition API with `<script setup>` | [L2 §12](../levels/L2_common.md#12-frontend-standards) |
+| TypeScript | Strict mode, no `any` types | [L2 §12](../levels/L2_common.md#12-frontend-standards) |
+| Pinia | Global state only, no business logic | [L2 §12](../levels/L2_common.md#12-frontend-standards) |
+| Data | Timestamps formatted via utility, not computed | [L1 Rule 8](../levels/L1_minimal.md#8-frontend-no-business-logic-pure-calculations-ok-cot-required) |
+| Production | No mock data, TODO/FIXME placeholders | [L1 Rule 1](../levels/L1_minimal.md#1-backend-owns-business-logic-cot-required) |
+| Security | No tokens/keys in localStorage (use HttpOnly cookies) | [L4 §5 (XSS)](../levels/L4_reference.md#5-xss-prevention) |
+| Security | No v-html with user data (use v-text) | [L4 §5 (XSS)](../levels/L4_reference.md#5-xss-prevention) |
+| Security | External URLs validated against allowlist | [L4 §5 (XSS)](../levels/L4_reference.md#5-xss-prevention) |
+| Security | CSP headers configured | [L4 §5 (CSP)](../levels/L4_reference.md#5-xss-prevention) |
 
 > **[@CoT-required]**: Before checking items, execute LLM-Review-Process Step 1 (Rule Localization) to identify which checklist items apply to this review.
-
-- [ ] No business logic implemented in frontend
-- [ ] No complex calculations in frontend
-- [ ] No data aggregation in frontend
-- [ ] Timestamps formatted using utility functions
-- [ ] Numbers displayed with simple formatting only
-- [ ] Using Vue 3 Composition API with `<script setup>`
-- [ ] TypeScript types defined for all props and data
-- [ ] Pinia used for global state only
-- [ ] No business logic in stores
-- [ ] Centralized API modules used
-- [ ] Loading indicators implemented
-- [ ] TypeScript strict mode enabled
-- [ ] No `any` types used
-- [ ] Responsive design implemented
-- [ ] No mock data or placeholder implementations
-- [ ] No TODO/FIXME placeholders in production code
-- [ ] Comments accurately describe current code behavior
-- [ ] No outdated or misleading comments
-- [ ] JSDoc comments for exported functions and components
-- [ ] Test cases updated when code changes
-- [ ] New components/functions have corresponding test cases
-- [ ] Bug fixes include regression tests
-- [ ] Guard clauses used to handle exceptions first
-- [ ] Early returns reduce nesting levels
-- [ ] Code structure is flat and readable
-- [ ] All existing UI features documented before refactoring
-- [ ] Feature checklist created and verified after refactoring
-- [ ] No functionality lost during refactoring
-- [ ] Event handlers preserved during refactoring
-- [ ] Accessibility features preserved during refactoring
-- [ ] Responsive behavior verified post-refactoring
-
-### Frontend Security Checklist
-
-- [ ] No sensitive data (tokens, keys) stored in localStorage/sessionStorage
-- [ ] API calls use HttpOnly cookies, not localStorage for auth tokens
-- [ ] User input sanitized before display (use Vue's v-text, avoid v-html with user data)
-- [ ] External URLs validated against allowlist before opening
-- [ ] CSP meta tag or header configured (primary XSS defense)
-- [ ] No inline scripts or styles with user-controlled content
-- [ ] Security headers set by backend (frontend proxy doesn't strip them)
-- [ ] Error messages don't expose sensitive system information
-- [ ] Third-party scripts audited (no supply chain attacks)
 
 ---
 
-## Code Review Checklist
+## Code Review Checklist (Summary)
+
+> **Note**: This checklist summarizes review checkpoints. Apply the LLM Review Operation Flow (three-phase: Full Blind Scan → Structured Grouping → Rule-Anchored Analysis) for systematic review.
+
+| Review Type | Key Questions | Canonical Source |
+|-------------|---------------|-----------------|
+| General | Readable? Obvious bugs? Better approach? | [L3 §3](../levels/L3_advanced.md#3-function-design) |
+| Error handling | Complete? Follows zero-value pattern? | [L2 §2](../levels/L2_common.md#2-error-handling) |
+| Security | Input validation? Injection protected? AuthZ? | [L4 Part B](../levels/L4_reference.md#part-b-security-standards) |
+| Business logic | Logic in backend only? | [L1 Rule 1](../levels/L1_minimal.md#1-backend-owns-business-logic-cot-required) |
+| Performance | Cyclomatic complexity ≤15? No hidden allocations? | [L3 §3.1](../levels/L3_advanced.md#31-control-complexity) |
+| Tests | Coverage adequate? Regression tests for bug fixes? | [L2 §7](../levels/L2_common.md#7-testing-standards) |
+| Refactoring | Features preserved? Incremental steps? | [L3 §4](../levels/L3_advanced.md#4-refactoring) |
 
 > **[@CoT-required]**: Before checking items, execute LLM-Review-Process Step 1 (Rule Localization) to identify which checklist items apply to this review.
-
-### General
-- [ ] Code readable and understandable?
-- [ ] Obvious bugs or performance issues?
-- [ ] Better implementation approach?
-- [ ] Error handling complete?
-- [ ] Sufficient tests?
-- [ ] Accurate naming?
-- [ ] Duplicate code?
-- [ ] Single responsibility for functions?
-- [ ] Follows team standards?
-
-### Security Review
-- [ ] Input validation on all trust boundaries?
-- [ ] SQL injection protected (parameterized queries only)?
-- [ ] No string concatenation in SQL/HTML/shell?
-- [ ] Authorization checks before sensitive operations?
-- [ ] Passwords use bcrypt, not MD5/SHA1?
-- [ ] Tokens/keys cryptographically random?
-- [ ] Auth tokens in HttpOnly cookies, not localStorage?
-- [ ] CSRF tokens on state-changing operations?
-- [ ] Output encoding context-aware?
-- [ ] No sensitive data in logs or error messages?
-- [ ] Security headers configured (CSP, X-Frame-Options, etc.)?
-- [ ] Dependencies scanned for vulnerabilities?
-- [ ] Hardcoded secrets removed?
-
-### Security Quick Checks
-- [ ] External input validated at trust boundary?
-- [ ] SQL/command injection protected (parameterized queries)?
-- [ ] Passwords hashed with bcrypt?
-- [ ] Auth tokens cryptographically random (256+ bits)?
-- [ ] Sensitive data excluded from logs?
-- [ ] Output encoded for context (HTML, JS, URL)?
 
 ---
 
-## Daily Development Checklist
+## Daily Development Checklist (Summary)
+
+> **Note**: Daily items for quick self-check before commit. See L1/L2 for detailed rules.
+
+| Check | Canonical Source |
+|-------|-----------------|
+| Naming: verb prefix, camelCase, no magic values | [L1 Rule 2, Rule 6](../levels/L1_minimal.md) |
+| Error handling: errors.Is(), zero-value pattern | [L2 §2.1, §2.4](../levels/L2_common.md#2-error-handling) |
+| Business logic in backend only | [L1 Rule 1](../levels/L1_minimal.md#1-backend-owns-business-logic-cot-required) |
+| gofmt + go vet + revive before commit | [L1 Rule 10](../levels/L1_minimal.md#10-pre-commit-format-lint-vet-cot-required) |
+| Comments explain "why" not "how" | [L2 §4](../levels/L2_common.md#4-comments) |
+| Functions: single responsibility, ≤15 complexity | [L3 §3.1](../levels/L3_advanced.md#31-control-complexity) |
+| No mock data, TODO/FIXME placeholders | [L1 Rule 1](../levels/L1_minimal.md#1-backend-owns-business-logic-cot-required) |
 
 > **[@CoT-required]**: Before checking items, execute LLM-Review-Process Step 1 (Rule Localization) to identify which checklist items apply to this review.
-
-- [ ] Variables/functions clearly express intent?
-- [ ] Functions focused and readable?
-- [ ] Cyclomatic complexity reasonable (≤15)?
-- [ ] Any duplicate code?
-- [ ] Error handling complete?
-- [ ] Comments explain "Why" not "How"?
-- [ ] Code passes `gofmt` and `go vet`?
-- [ ] Unit test coverage?
-- [ ] Follows language idioms?
 
 ---
 

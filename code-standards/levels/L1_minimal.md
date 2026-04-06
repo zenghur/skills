@@ -63,6 +63,8 @@ func FindUser(id string) (*User, error) {
 
 ## 4. Use errors.Is() for Error Comparison [@CoT-required]
 
+> **Canonical source**: [L2 §2.4](L2_common.md#24-no-redundant-nil-checks) — detailed patterns including zero-value pattern and error wrapping
+
 Never use `==` to compare errors. Use `errors.Is()` or `errors.As()`.
 
 ```go
@@ -106,6 +108,8 @@ if user.Status == StatusActive { ... }
 ```
 
 ## 7. Goroutines via SafeGo [@CoT-required]
+
+> **Canonical source**: [L3 §2.1](L3_advanced.md#21-goroutine-safety-rules) — detailed concurrency patterns, channel usage, and goroutine leak prevention
 
 Never use `go` keyword directly. Use `goroutine.SafeGo` or `goroutine.SafeGoWithContext`.
 
