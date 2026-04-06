@@ -71,6 +71,49 @@ Your value is in the **last 20%**.
 
 ---
 
+## Workspace Location (Mandatory)
+
+**CRITICAL:** ALL verification artifacts MUST be stored in `./tmp/` at the project root.
+
+```
+project-root/
+├── src/
+├── package.json
+├── tmp/                    ← Verification workspace (HERE)
+│   ├── verify-build.log
+│   ├── verify-test.log
+│   ├── verify-api.json
+│   └── spotcheck-*.json
+└── ...
+```
+
+**Location Rules:**
+- `./tmp/` = `{current_project_root}/tmp/`
+- Must be in the project you are verifying
+- NOT in `/tmp/` (system temp)
+- NOT in `~/tmp/` (user temp)
+- NOT in any subdirectory
+
+**How to ensure correct location:**
+```bash
+# At the start of verification
+pwd  # Confirm you are in project root
+mkdir -p ./tmp  # Create workspace
+
+# All outputs go here
+command > ./tmp/verify-step1.log
+```
+
+**Why project root?**
+- Evidence is visible to the project owner
+- Can be reviewed in git diff if needed
+- Easy cleanup (just delete ./tmp/)
+- No permission issues
+
+**Evidence files in wrong location = AUTOMATIC FAIL**
+
+---
+
 ## Mandatory Evidence Chain (Anti-Cheating)
 
 **CRITICAL:** To prevent fabrication of outputs, you MUST follow this evidence chain for EVERY verification step.
