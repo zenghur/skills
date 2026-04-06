@@ -23,7 +23,7 @@
 | GORM | Use struct for updates, not map[string]interface{} | [L1 Rule 5](../levels/L1_minimal.md#5-prefer-struct-over-map-cot-required) |
 | Logging | Structured logging (InfoW/WarnW/ErrorW/DebugW) | [L2 §5](../levels/L2_common.md#5-logging) |
 | Logging | No fmt.Sprintf in log messages | [L2 §5](../levels/L2_common.md#5-logging) |
-| Timestamps | int64 UnixMilli for DB and API | [L1 Rule 10](../levels/L1_minimal.md#10-pre-commit-format-lint-vet-cot-required) |
+| Timestamps | int64 UnixMilli for DB and API | [L2 §5](../levels/L2_common.md#5-timestamp-handling) |
 | Naming | camelCase, verb prefix, no magic values | [L1 Rule 2](../levels/L1_minimal.md#2-function-naming-verb-prefix-cot-required) |
 | Nil checks | No redundant nil checks for initialized deps | [L2 §2.4](../levels/L2_common.md#24-no-redundant-nil-checks) |
 | Refactoring | Preserve all features, incremental steps | [L3 §4](../levels/L3_advanced.md#4-refactoring) |
@@ -48,7 +48,7 @@
 | Vue | Vue 3 Composition API with `<script setup>` | [L2 §12](../levels/L2_common.md#12-frontend-standards) |
 | TypeScript | Strict mode, no `any` types | [L2 §12](../levels/L2_common.md#12-frontend-standards) |
 | Pinia | Global state only, no business logic | [L2 §12](../levels/L2_common.md#12-frontend-standards) |
-| Data | Timestamps formatted via utility, not computed | [L1 Rule 8](../levels/L1_minimal.md#8-frontend-no-business-logic-pure-calculations-ok-cot-required) |
+| Data | Timestamps formatted via utility, not computed | [L2 §5](../levels/L2_common.md#5-timestamp-handling) |
 | Production | No mock data, TODO/FIXME placeholders | [L1 Rule 11](../levels/L1_minimal.md#11-production-grade-code-cot-required) |
 | Security | No tokens/keys in localStorage (use HttpOnly cookies) | [L4 §5 (XSS)](../levels/L4_reference.md#5-xss-prevention) |
 | Security | No v-html with user data (use v-text) | [L4 §5 (XSS)](../levels/L4_reference.md#5-xss-prevention) |
