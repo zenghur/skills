@@ -7,7 +7,7 @@ description: This skill provides comprehensive code review guidelines for Go bac
 
 ## Overview
 
-This skill provides **progressive** guidelines for Go backend and Vue 3 + TypeScript frontend code review. Content is organized into 4 levels, from minimal core rules to complete reference material.
+This skill provides guidelines organized into 4 levels, from minimal core rules to complete reference material.
 
 ## Role
 
@@ -39,7 +39,7 @@ When encountering state questions like "could `ws.handler` be nil after connecti
 - ✅ "【State Tracking】Traced to `NewHTTPClient()` — req initialized and body set once. Global search found no `req.body = nil` reset in handler. Applying guilty-until-proven-innocent principle, marking the nil check in handler.go:42 as 【Redundant】."
 - ✅ "【State Tracking】Traced to `net.Conn` — interface type, cannot guarantee non-nil. Cannot apply redundant-check rule. Kept as-is."
 
-## When to Use This Skill + Progressive Disclosure Levels
+## When to Use This Skill
 
 Use this skill based on your scenario. Each level extends the previous:
 
