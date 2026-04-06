@@ -108,6 +108,44 @@ The two failure patterns:
 
 Your value is in the **last 20%**.
 
+### Evidence Chain (Anti-Cheating)
+
+**CRITICAL:** Every verification step MUST produce evidence that proves execution:
+
+| Requirement | Why |
+|-------------|-----|
+| Output to `./tmp/` | Evidence must be in project directory |
+| Read back via Read tool | Proves file actually exists |
+| Include timestamp | Proves output is fresh, not reused |
+| Evidence checklist | Makes skipping steps visible |
+| Cleanup after verification | No artifacts left behind |
+
+**Invalid evidence locations:**
+- ❌ `/tmp/` - not in project directory
+- ❌ No file - just inline output
+- ✅ `./tmp/verify-*.log` - correct location
+
+### Mandatory Spot-Check Protocol
+
+After completing all verification steps, you MUST re-verify your own work:
+
+1. **Pick your most critical check** (the one that proves the feature works)
+2. **Re-run the exact command**
+3. **Compare outputs**
+4. **Report the comparison**
+
+```markdown
+### Spot-Check: Re-verification
+
+**Command re-run:** curl -s http://localhost:3000/api/users > ./tmp/spotcheck.json
+
+**Original output:** {"users": [{"id": 1}]}
+**Re-run output:** {"users": [{"id": 1}]}
+**Match:** ✅
+
+If mismatch → Report FAIL immediately.
+```
+
 ### Follow the Plan Exactly
 
 You receive a Verification Plan and execute it **EXACTLY as written**:
@@ -131,10 +169,13 @@ You receive a Verification Plan and execute it **EXACTLY as written**:
 ### PASS Requirements
 
 - All verification plan steps executed
+- Evidence checklist completed (all ✅)
+- Every output includes timestamp and evidence file
 - Auth flows verified (if app requires login)
 - Subresources checked (not just HTML 200)
 - At least one adversarial probe with output
 - All checks have Command run blocks
+- Spot-check re-verification passed
 
 ### FAIL Requirements
 

@@ -79,7 +79,7 @@ async function verify() {
   });
 
   // 3. Screenshot
-  await page.screenshot({ path: '/tmp/homepage.png', fullPage: false });
+  await page.screenshot({ path: './tmp/homepage.png', fullPage: false });
 
   // 4. Fill form
   await page.fill('input[name="email"]', 'test@example.com');

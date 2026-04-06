@@ -19,55 +19,86 @@ These probes try to break the system:
 
 ---
 
-## Spot-Check Re-verification (Critical for PASS)
+## Spot-Check Re-verification (Mandatory Self-Check)
 
-When verification reports PASS, you MUST spot-check before accepting.
+After reporting verification results, you MUST perform a self-spot-check before issuing final VERDICT.
 
-### Spot-Check Rules
+### Why This Matters
 
-```
-1. Pick 2-3 commands from the report randomly
-2. Re-run them EXACTLY as reported
-3. Compare output with reported output
-4. If mismatch → Resume verifier with specifics
-```
+LLMs can fabricate outputs. The spot-check forces you to prove you actually ran the commands.
 
-### Spot-Check Examples
+### Mandatory Spot-Check Protocol
 
-**Example: Report says PASS but no command block**
+**Step 1: Identify the most critical check**
+- The check that proves the feature works
+- Usually an API response, UI screenshot, or test output
 
-```
-### Check: API returns user list
-**Result: PASS**
+**Step 2: Re-run the exact command**
 
-❌ INVALID - No command run block
-→ Resume verifier: "Your report lacks command output for this check"
+```bash
+# Example: If you verified an API endpoint
+mkdir -p ./tmp
+date && curl -s http://localhost:3000/api/users > ./tmp/spotcheck-retry.json
+cat ./tmp/spotcheck-retry.json
 ```
 
-**Example: Output mismatches**
+**Step 3: Compare with original output**
 
-```
-### Check: curl /api/users returns 200
-**Reported output:** {"users": [...]}
-**Your re-run:** {"error": "unauthorized"}
+```markdown
+### Spot-Check: Self-Verification
 
-❌ MISMATCH - Auth might be required
-→ Resume verifier: "Output doesn't match, auth may be needed"
+**Original output (from Step 3):**
+```
+Mon Apr  6 18:45:23 CST 2026
+{"users": [{"id": 1, "name": "Alice"}]}
 ```
 
-### Spot-Check Decision Tree
+**Re-run output (just now):**
+```
+Mon Apr  6 18:50:15 CST 2026
+{"users": [{"id": 1, "name": "Alice"}]}
+```
 
+**Evidence files:**
+- Original: ./tmp/verify-api.json
+- Spot-check: ./tmp/spotcheck-retry.json
+
+**Comparison:**
+- Timestamp: Different (expected - different run times)
+- Content: **MATCH** ✅
+- Result: Spot-check PASSED
+
+If mismatch → Investigate why, may need to report FAIL.
 ```
-Report says PASS
-    ↓
-Pick 2-3 commands randomly
-    ↓
-Re-run each command
-    ↓
-Output matches?
-├── YES → Accept PASS
-└── NO  → "Resume verifier with mismatch details"
+
+### Spot-Check Failure Examples
+
+**Example 1: Output doesn't match**
+```markdown
+### Spot-Check: FAILED
+**Original:** {"users": [...]}
+**Re-run:** {"error": "unauthorized"}
+→ The endpoint requires auth, but original check was done with cached credentials
+→ Report: FAIL - authentication inconsistency detected
 ```
+
+**Example 2: File doesn't exist**
+```markdown
+### Spot-Check: FAILED
+**Original evidence file:** ./tmp/verify-api.json
+**Read attempt:** File not found
+→ The file was never created, output was fabricated
+→ Report: FAIL - evidence file missing, verification was incomplete
+```
+
+### Anti-Patterns (Will Be Detected)
+
+| Anti-Pattern | Detection Method |
+|--------------|-----------------|
+| Fabricated output | Re-run command, compare results |
+| Reused old output | Timestamp mismatch or no timestamp |
+| Skipped steps | Evidence file missing |
+| Didn't read logs | Cannot quote specific lines |
 
 ---
 
@@ -87,7 +118,7 @@ async function captureScreenshots() {
   for (const name of pages) {
     await page.goto(`http://localhost:3000/${name}`);
     await page.screenshot({
-      path: `/tmp/screenshot-${name}-${Date.now()}.png`,
+      path: `./tmp/screenshot-${name}-${Date.now()}.png`,
       fullPage: false
     });
   }
@@ -98,7 +129,7 @@ async function captureScreenshots() {
 
 **With curl + wkhtmltoimage:**
 ```bash
-wkhtmltoimage --quality 90 http://localhost:3000 /tmp/screenshot-homepage.png
+wkhtmltoimage --quality 90 http://localhost:3000 ./tmp/screenshot-homepage.png
 ```
 
 ### Screenshot Comparison
@@ -112,8 +143,8 @@ const { PNG } = require('pngjs');
 const pixelmatch = require('pixelmatch');
 const fs = require('fs');
 
-const img1 = PNG.sync.read(fs.readFileSync('/tmp/baseline-homepage.png'));
-const img2 = PNG.sync.read(fs.readFileSync('/tmp/current-homepage.png'));
+const img1 = PNG.sync.read(fs.readFileSync('./tmp/baseline-homepage.png'));
+const img2 = PNG.sync.read(fs.readFileSync('./tmp/current-homepage.png'));
 const diff = new PNG(img1.width, img1.height);
 
 const numDiffPixels = pixelmatch(img1, img2, diff, {
@@ -121,7 +152,7 @@ const numDiffPixels = pixelmatch(img1, img2, diff, {
   includeAA: true
 });
 
-fs.writeFileSync('/tmp/diff-homepage.png', PNG.sync.write(diff));
+fs.writeFileSync('./tmp/diff-homepage.png', PNG.sync.write(diff));
 
 if (numDiffPixels > 0) {
   console.log('FAIL: Screenshots differ by ' + numDiffPixels + ' pixels');
@@ -133,8 +164,8 @@ if (numDiffPixels > 0) {
 
 **Using ImageMagick:**
 ```bash
-compare /tmp/baseline-homepage.png /tmp/current-homepage.png /tmp/diff-homepage.png
-convert /tmp/baseline.png /tmp/current.png -compose difference /tmp/diff.png
+compare ./tmp/baseline-homepage.png ./tmp/current-homepage.png ./tmp/diff-homepage.png
+convert ./tmp/baseline.png ./tmp/current.png -compose difference ./tmp/diff.png
 ```
 
 ### Visual Diff Checklist

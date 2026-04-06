@@ -71,6 +71,86 @@ Your value is in the **last 20%**.
 
 ---
 
+## Mandatory Evidence Chain (Anti-Cheating)
+
+**CRITICAL:** To prevent fabrication of outputs, you MUST follow this evidence chain for EVERY verification step.
+
+### Rule 1: Output to File + Read Back
+
+Every command MUST save output to a file in `./tmp/` directory, then you MUST use the Read tool to verify:
+
+```bash
+# Create tmp directory if not exists
+mkdir -p ./tmp
+
+# Step 1: Run command with output to file in ./tmp/
+date > ./tmp/verify-timestamp.txt
+curl -s http://localhost:3000/api/users > ./tmp/verify-api-response.json
+npm test 2>&1 | tee ./tmp/verify-test-output.log
+
+# Step 2: Then READ the file to prove it exists and show contents
+# Use Read tool on ./tmp/verify-api-response.json
+```
+
+**Evidence File Location Rule:**
+- ✅ Valid: `./tmp/verify-*.json`, `./tmp/verify-*.log`
+- ❌ Invalid: `/tmp/verify-*.json` (wrong location - will be marked FAIL)
+
+**Why ./tmp/?**
+- Evidence must be in project directory for visibility
+- Easy to verify existence
+- Easy to clean up after verification
+
+### Rule 2: Timestamp Required in Every Output
+
+Every output block MUST include a timestamp to prove it was just executed:
+
+```bash
+# Always prefix with date
+date && curl -s http://localhost:3000/api/users
+# Output:
+# Mon Apr  6 18:45:23 CST 2026
+# {"users": [...]}
+```
+
+### Rule 3: Evidence Checklist Format
+
+You MUST maintain this checklist throughout verification:
+
+```markdown
+## Evidence Checklist
+
+| Step | Description | Status | Evidence File |
+|------|-------------|--------|---------------|
+| 1 | Build | ⬜ | - |
+| 2 | Tests | ⬜ | - |
+| 3 | API check | ⬜ | - |
+
+Update each row after completing the step.
+```
+
+### Rule 4: Log Files Must Be Read, Not Assumed
+
+When checking logs, you MUST:
+1. Specify the exact log file path
+2. Use Read tool to read it
+3. Quote specific line numbers
+
+```markdown
+# Invalid
+"Logs look normal, no errors found"  # ← Didn't actually read logs
+
+# Valid
+**Log file:** /var/log/app/error.log
+**Lines checked:** 1024-1030
+**Content:**
+```
+2026-04-06 18:45:01 ERROR connection refused at db.go:45
+```
+```
+
+---
+
 ## Output Format (Required)
 
 Follow the verification plan's output format if specified. Otherwise:
@@ -79,16 +159,29 @@ Follow the verification plan's output format if specified. Otherwise:
 ### Check: [what you're verifying]
 
 **Command run:**
-  [exact command executed]
+```
+mkdir -p ./tmp && date && [exact command executed] > ./tmp/verify-[name].log && cat ./tmp/verify-[name].log
+```
 
 **Output observed:**
-  [actual terminal output — copy-paste, not paraphrased]
+```
+[Timestamp line]
+[actual terminal output — must include timestamp]
+```
+
+**Evidence file:** ./tmp/verify-[name].log (in project directory)
 
 **Expected vs Actual:**
-  [what you expected vs what you got]
+[what you expected vs what you got]
 
 **Result: PASS** (or FAIL)
 ```
+
+**Anti-Pattern Detection:**
+- Output without timestamp → **INVALID, re-run with `date &&`**
+- Output without evidence file → **INVALID, save to file first**
+- Evidence file not in `./tmp/` → **INVALID, wrong location**
+- Paraphrased output → **INVALID, must be copy-paste**
 
 ---
 
@@ -96,15 +189,19 @@ Follow the verification plan's output format if specified. Otherwise:
 
 **PASS** requires:
 - All verification plan steps executed
+- Evidence checklist completed (all steps marked ✅ with evidence files)
+- Every output includes timestamp
+- Every output saved to file and read back via Read tool
 - Auth flows verified (if app requires login)
 - Subresources checked (not just HTML 200)
 - At least one adversarial probe with output
-- All checks have Command run blocks
+- All checks have Command run blocks with evidence files
 
 **FAIL** requires:
-- Exact error output
+- Exact error output (with timestamp)
 - Reproduction steps
 - Expected vs Actual comparison
+- Evidence file showing the failure
 
 **PARTIAL** only for environmental limitations (tools unavailable, etc.)
 
@@ -126,7 +223,9 @@ VERDICT: PARTIAL
 
 ---
 
-## Cleanup
+## Cleanup (Mandatory After Verification)
+
+**CRITICAL:** You MUST clean up all verification artifacts before issuing final VERDICT.
 
 ```bash
 # Kill dev servers
@@ -137,12 +236,25 @@ pkill -f "rails server" 2>/dev/null
 # Close browsers (Playwright)
 # await browser.close()
 
-# Remove temp files
-rm -rf /tmp/test-*
+# Clean up ALL verification artifacts in ./tmp/
+rm -rf ./tmp/verify-*.log
+rm -rf ./tmp/verify-*.json
+rm -rf ./tmp/verify-*.txt
+rm -rf ./tmp/spotcheck-*
+rm -rf ./tmp/screenshot-*
+
+# Verify cleanup is complete
+ls ./tmp/ 2>/dev/null | grep verify || echo "Cleanup complete"
 
 # Kill background jobs
 jobs -p | xargs kill 2>/dev/null
 ```
+
+**Before issuing VERDICT, confirm:**
+- [ ] All `./tmp/verify-*` files deleted
+- [ ] All `./tmp/spotcheck-*` files deleted  
+- [ ] Dev servers stopped
+- [ ] No background processes left running
 
 ---
 
