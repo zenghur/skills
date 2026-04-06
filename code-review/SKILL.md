@@ -3,11 +3,11 @@ name: code-review
 description: This skill provides comprehensive coding standards for Go backend and Vue 3 + TypeScript frontend projects. Use this skill when writing, reviewing, or refactoring code to ensure consistency, maintainability, and adherence to best practices. The skill emphasizes separation of concerns where backend handles all business logic and calculations, while frontend focuses solely on presentation.
 ---
 
-# Code Standards
+# Code Review
 
 ## Overview
 
-This skill provides **progressive** coding standards for Go backend and Vue 3 + TypeScript frontend development. Standards are organized into 4 levels, from minimal core rules to complete reference material.
+This skill provides **progressive** standards for code review in Go backend and Vue 3 + TypeScript frontend development. Standards are organized into 4 levels, from minimal core rules to complete reference material.
 
 ## Role
 

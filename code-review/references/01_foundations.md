@@ -124,7 +124,7 @@ You'll search for "Genymdhms" when debugging at 2am. Don't do that to yourself.
 
 #### 1.5 Go/revive Conventions for Abbreviations
 
-The code-standards specify these naming conventions:
+The code review guidelines specify these naming conventions:
 
 - **Interface data**: camelCase (e.g., `userID`, `sessionID`, `orderID`)
 - **Abbreviations in camelCase**: Keep them uppercase when internal (e.g., `userID`, not `userId`)
@@ -1051,7 +1051,7 @@ type UserRepository interface {
 This manifests in:
 - Not shipping known-bad code
 - Writing tests before you ship
-- Reading code standards and following them
+- Reading code review guidelines and following them
 - Keeping skills current
 
 ### 2. Think! About Your Work
@@ -2171,7 +2171,7 @@ Modularity in Go:
 
 ---
 
-## Key Additions: Concepts Not Currently in Code-Standards
+## Key Additions: Concepts Not Currently in Code Review Guidelines
 
 Based on this deep analysis, the following concepts could strengthen our standards:
 
