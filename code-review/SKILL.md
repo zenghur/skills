@@ -128,7 +128,7 @@ These principles are detailed in specific levels. See canonical sources:
 | errors.Is() for error comparison | [L2 §2.1–§2.3](levels/L2_common.md#2-error-handling) |
 | Zero-value pattern | [L2 §2.1](levels/L2_common.md#21-zero-value-pattern) |
 | GORM explicit column tags | [L1 Rule 9](levels/L1_minimal.md#9-gorm-explicit-column-tags-cot-required) |
-| Structured logging | [L2 §5](levels/L2_common.md#5-logging) |
+| Structured logging | [L2 §4](levels/L2_common.md#4-logging-standards) |
 | Refactoring principles | [L3 §4](levels/L3_advanced.md#4-refactoring) |
 | DDD patterns | [L3 §1](levels/L3_advanced.md#1-ddd-architecture) |
 | Code smells | [L3 §5](levels/L3_advanced.md#5-code-smells) |
