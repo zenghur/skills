@@ -226,6 +226,49 @@ func Process(user *User) error {
 
 **Key insight**: Both `!= nil` and `== nil` can be redundant. `!= nil` is redundant when the pointer is guaranteed non-nil (DI, startup init). `== nil` is redundant when the error already captures the nil case, or when a prior check already established the pointer is non-nil. Only check nil when the origin makes nil possible.
 
+### 2.5 Error Must Not Be Ignored
+
+> **[@CoT-required]**: When reviewing error handling, execute Review Process Step 1-3 before giving conclusions.
+
+Every `error` returned by a function call must be explicitly handled. No exceptions.
+
+**Allowed handling patterns (choose one):**
+
+1. **Propagate** — return to caller
+   ```go
+   if err := db.Create(&user).Error; err != nil {
+       return fmt.Errorf("create user: %w", err)
+   }
+   ```
+
+2. **Log and continue** — if the error is non-fatal and the operation can reasonably continue
+   ```go
+   if err := metric.Record(m); err != nil {
+       logger.Warn("failed to record metric", "error", err)
+   }
+   ```
+
+3. **Wrap with context** — `fmt.Errorf` with `%w` when returning to caller
+   ```go
+   return fmt.Errorf("process order %s: %w", orderID, err)
+   ```
+
+**Forbidden patterns:**
+
+```go
+// ❌ Forbidden: Ignored error via _
+_ = os.WriteFile("cfg.json", data, 0644)
+
+// ❌ Forbidden: Empty if statement
+if err != nil {
+}
+
+// ❌ Forbidden: Commented-out handling
+// if err != nil {
+//     return err
+// }
+```
+
 ---
 
 ## 3. Database Standards (GORM)
