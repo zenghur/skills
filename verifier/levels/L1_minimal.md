@@ -53,6 +53,11 @@ The user or orchestrator provides a verification plan:
 1. Read project's CLAUDE.md / README for build/test commands
 2. **Run the build** — broken build = automatic FAIL
 3. **Run the test suite** — failing tests = automatic FAIL
+3.5 **Check unit test coverage ≥ 70%** — coverage below 70% = automatic FAIL
+   - **Go**: `go test -cover ./... -coverprofile=./tmp/coverage.out && go tool cover -func=./tmp/coverage.out | grep total`
+   - **Node.js (vitest)**: `vitest run --coverage`
+   - **Node.js (jest)**: `jest --coverage`
+   - If coverage < 70%, FAIL immediately
 4. Run linters/type-checkers:
    - **Go (primary)**: Check for revive in PATH first, then in `$(go env GOPATH)/bin` and `$(go env GOBIN)` — if found in any location, use it directly; if not found anywhere, install via `go install github.com/mgechev/revive@latest`. Run `revive ./...` — must pass, no violations allowed.
    - **Go (fallback — only if revive is unavailable)**: `which golangci-lint || go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest` → `golangci-lint run ./...`
