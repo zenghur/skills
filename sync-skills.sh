@@ -70,7 +70,7 @@ sync_skills() {
             # Copy entire skill directory
             cp -r "$source_skill_dir" "$target_skill_dir"
             echo "✓ Synced $skill_name"
-            ((count++))
+            count=$((count + 1))
         fi
     done
     
