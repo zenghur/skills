@@ -129,6 +129,7 @@ These principles are detailed in specific levels. See canonical sources:
 | Zero-value pattern | [L2 §2.1](levels/L2_common.md#21-zero-value-pattern) |
 | GORM explicit column tags | [L1 Rule 9](levels/L1_minimal.md#9-gorm-explicit-column-tags-cot-required) |
 | Structured logging | [L2 §4](levels/L2_common.md#4-logging-standards) |
+| HTTP status code style | [L2 §13](levels/L2_common.md#13-http-status-code-style) |
 | Refactoring principles | [L3 §4](levels/L3_advanced.md#4-refactoring) |
 | DDD patterns | [L3 §1](levels/L3_advanced.md#1-ddd-architecture) |
 | Code smells | [L3 §5](levels/L3_advanced.md#5-code-smells) |

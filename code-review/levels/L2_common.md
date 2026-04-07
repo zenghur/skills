@@ -965,3 +965,72 @@ Support both desktop and mobile layouts. Use CSS media queries or utility classe
   </div>
 </template>
 ```
+
+---
+
+## 13. HTTP Status Code Style
+
+> **[@CoT-required]**: When reviewing HTTP status codes and error responses, execute Review Process Step 1-3 before giving conclusions.
+
+### 13.1 Status Code Usage
+
+| Status | When to Use | Response Body |
+|--------|-------------|---------------|
+| 200 OK | Successful GET, PUT, PATCH | Resource or result data |
+| 201 Created | Successful POST (new resource) | Created resource |
+| 204 No Content | Successful DELETE, or response has no body | None |
+| 400 Bad Request | Invalid request parameters, validation failure | `{"error": "...", "code": "ERR_XXXX"}` |
+| 401 Unauthorized | Missing or invalid authentication | `{"error": "...", "code": "ERR_UNAUTHORIZED"}` |
+| 403 Forbidden | Authenticated but no permission | `{"error": "...", "code": "ERR_FORBIDDEN"}` |
+| 404 Not Found | Resource does not exist | `{"error": "Not found", "code": "ERR_NOT_FOUND"}` |
+| 422 Unprocessable Entity | Semantic validation failure (business rules) | `{"error": "...", "code": "ERR_VALIDATION"}` |
+| 500 Internal Server Error | Unexpected server error | `{"error": "Internal server error", "code": "ERR_INTERNAL"}` — never leak internal details |
+
+### 13.2 Error Response Format
+
+```go
+type ErrorResponse struct {
+    Error string `json:"error"` // Human-readable message
+    Code  string `json:"code"`   // Machine-readable error code
+}
+```
+
+```go
+// ✅ Good: respondError sets correct status code
+func respondError(w http.ResponseWriter, err error) {
+    var (
+        statusCode = http.StatusInternalServerError
+        code       = "ERR_INTERNAL"
+        message    = "Internal server error"
+    )
+
+    if errors.Is(err, ErrNotFound) {
+        statusCode = http.StatusNotFound
+        code = "ERR_NOT_FOUND"
+        message = "Resource not found"
+    } else if errors.Is(err, ErrValidation) {
+        statusCode = http.StatusBadRequest
+        code = "ERR_VALIDATION"
+        message = err.Error()
+    }
+    // ... more error type mapping
+
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(statusCode)
+    json.NewEncoder(w).Encode(ErrorResponse{Error: message, Code: code})
+}
+
+// ✅ Good: respondJSON only used for success responses
+func respondJSON(w http.ResponseWriter, data interface{}) {
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(http.StatusOK)
+    json.NewEncoder(w).Encode(data)
+}
+```
+
+### 13.3 Absolute Rules
+
+1. **Never return 200 for errors** — even if the JSON body contains an `error` field, the HTTP status code must reflect the error
+2. **Never expose internal details in 5xx** — stack traces, SQL errors, file paths belong in logs, not in the response
+3. **respondJSON is for success only** — if in doubt, use respondError
+4. **Consistent error codes** — define error codes as constants (e.g., `ErrNotFound`, `ErrValidation`)
