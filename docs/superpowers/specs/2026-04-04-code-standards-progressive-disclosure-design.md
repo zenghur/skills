@@ -32,7 +32,7 @@
 7. 无 go 关键字，用 goroutine.SafeGo
 8. Frontend 不做业务计算，只接收后端预计算数据
 9. gorm 字段显式 tag，只写 column
-10. 提交前 gofmt + go vet + revive
+10. 提交前 gofmt + go vet + golangci-lint
 ```
 
 ### Level 2: Common（日常开发规则）

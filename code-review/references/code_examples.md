@@ -1348,25 +1348,25 @@ type Trade struct {
 - Enable Go language linting tools
 - Configure automatic formatting (gofmt)
 - Set up code review rules
-- Install revive linter: `go install github.com/mgechev/revive@latest`
+- Install golangci-lint: `go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest`
 
 ### 16.2 Pre-commit Checks
 - Add pre-commit hook to check standards
 - Use static analysis tools to check code quality
 - Run unit tests to ensure functionality correctness
-- Run `revive ./...` to check code style
+- Run `golangci-lint run ./...` to check code style
 
 ### 16.3 Code Quality Tools
 
 ```bash
-# Install revive linter
-go install github.com/mgechev/revive@latest
+# Install golangci-lint
+go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 
 # Static analysis
 go vet ./...
 
 # Code linting
-revive ./...
+golangci-lint run ./...
 
 # Formatting
 gofmt -w .

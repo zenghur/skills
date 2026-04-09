@@ -101,7 +101,7 @@ Recommendation: [If applicable, must derive naturally from Step 2 findings]
 | 7 | 无 go 关键字，用 goroutine.SafeGo | [@CoT-required] |
 | 8 | Frontend 不做业务计算 | [@CoT-required] |
 | 9 | gorm 字段显式 tag，只写 column | [@CoT-required] |
-| 10 | 提交前 gofmt + go vet + revive | [@CoT-required] |
+| 10 | 提交前 gofmt + go vet + golangci-lint | [@CoT-required] |
 
 ### L2 Common（日常开发规则）
 

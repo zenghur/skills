@@ -169,7 +169,7 @@ Before every commit, run:
 gofmt -w .
 goimports -w .
 go vet ./...
-revive ./...
+golangci-lint run ./...
 ```
 
 ## 11. Production-Grade Code [@CoT-required]
@@ -224,5 +224,5 @@ func GetUser(ctx context.Context, id string) (*User, error) {
 - [ ] SafeGo for goroutines
 - [ ] Frontend only displays, doesn't calculate
 - [ ] GORM explicit column tags
-- [ ] gofmt + go vet + revive before commit
+- [ ] gofmt + go vet + golangci-lint before commit
 - [ ] No mock data, TODO/FIXME, or placeholder code

@@ -88,7 +88,7 @@
 | Naming: verb prefix, camelCase, no magic values | [L1 Rule 2, Rule 6](../levels/L1_minimal.md) |
 | Error handling: errors.Is(), zero-value pattern | [L1 Rule 4](../levels/L1_minimal.md#4-use-errorsis-for-error-comparison-cot-required), [L2 §2.1](../levels/L2_common.md#21-zero-value-pattern) |
 | Business logic in backend only | [L1 Rule 1](../levels/L1_minimal.md#1-backend-owns-business-logic-cot-required) |
-| gofmt + go vet + revive before commit | [L1 Rule 10](../levels/L1_minimal.md#10-pre-commit-format-lint-vet-cot-required) |
+| gofmt + go vet + golangci-lint before commit | [L1 Rule 10](../levels/L1_minimal.md#10-pre-commit-format-lint-vet-cot-required) |
 | Comments explain "why" not "how" | [L2 §4](../levels/L2_common.md#6-comments) |
 | Functions: single responsibility, ≤15 complexity | [L3 §3.1](../levels/L3_advanced.md#31-control-complexity) |
 | No mock data, TODO/FIXME placeholders | [L1 Rule 11](../levels/L1_minimal.md#11-production-grade-code-cot-required) |

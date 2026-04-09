@@ -534,7 +534,7 @@ if isValidUser && hasPermission && isNotExpired {
 gofmt -w .       # Format code
 goimports -w .   # Format + organize imports
 go vet ./...     # Static analysis
-revive ./...     # Linting
+golangci-lint run ./...     # Linting
 ```
 
 ---

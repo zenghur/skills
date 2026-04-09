@@ -16,14 +16,14 @@ This is a **coding standards skill** repository containing comprehensive guideli
 ## Development Commands
 
 ```bash
-# Install revive linter (required for lint checks)
-go install github.com/mgechev/revive@latest
+# Install golangci-lint (required for lint checks)
+go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 
 # Static analysis
 go vet ./...
 
 # Lint check (required before any PR)
-revive ./...
+golangci-lint run ./...
 
 # Format code
 gofmt -w .
@@ -61,7 +61,7 @@ goimports -w .
 
 Every code modification must:
 1. Compile successfully (`go build`)
-2. Pass revive lint check (`revive ./...`)
+2. Pass golangci-lint check (`golangci-lint run ./...`)
 3. Follow naming conventions (camelCase for interfaces)
 4. Include no magic numbers or strings (use constants)
 5. Have complete implementations (no placeholders)
