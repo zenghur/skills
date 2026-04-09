@@ -122,7 +122,7 @@ type TransactionRecord struct {
 **Why this matters**: You'll say "D-T-A-R-C-R-D-one-oh-two" in meetings.
 You'll search for "Genymdhms" when debugging at 2am. Don't do that to yourself.
 
-#### 1.5 Go/revive Conventions for Abbreviations
+#### 1.5 Go/golangci-lint Conventions for Abbreviations
 
 The code review guidelines specify these naming conventions:
 

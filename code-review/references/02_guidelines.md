@@ -65,7 +65,7 @@ type TransactionRecord struct {
 }
 ```
 
-### Rule 1.4: Go/revive Abbreviation Convention
+### Rule 1.4: Go/golangci-lint Abbreviation Convention
 
 Keep ID, URL, HTTP uppercase in camelCase.
 

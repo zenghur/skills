@@ -455,7 +455,7 @@ func Process() { ... }
 
 ### 5.1 Structured Logging (REQUIRED)
 
-The project uses structured logging with key-value pairs. Log keys MUST use camelCase naming following Go/revive conventions (e.g., `userID`, `sessionID`, `apiKey`). Abbreviations like ID, URL, API should remain uppercase in camelCase. Always use `InfoW`, `WarnW`, `ErrorW`, `DebugW` series functions.
+The project uses structured logging with key-value pairs. Log keys MUST use camelCase naming following Go/golangci-lint conventions (e.g., `userID`, `sessionID`, `apiKey`). Abbreviations like ID, URL, API should remain uppercase in camelCase. Always use `InfoW`, `WarnW`, `ErrorW`, `DebugW` series functions.
 
 #### Correct Structured Logging
 
@@ -519,7 +519,7 @@ logger.G().InfoW("API key loaded", "apiKey", apiKey) // Prohibited!
 logger.G().InfoW("User credentials", "password", password) // Prohibited!
 ```
 
-### 5.3 Key Naming Reference Table (Go/revive Conventions)
+### 5.3 Key Naming Reference Table (Go/golangci-lint Conventions)
 
 Abbreviations (ID, URL, API, HTTP, etc.) should remain uppercase in camelCase: `userID`, `apiURL`, `httpRequest`.
 
