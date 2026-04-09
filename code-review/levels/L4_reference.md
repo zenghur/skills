@@ -27,6 +27,7 @@
 | Naming | camelCase, verb prefix, no magic values | [L1 Rule 2](../levels/L1_minimal.md#2-function-naming-verb-prefix-cot-required) |
 | Nil checks | No redundant nil checks for initialized deps | [L2 §2.4](../levels/L2_common.md#24-no-redundant-nil-checks) |
 | Refactoring | Preserve all features, incremental steps | [L3 §4](../levels/L3_advanced.md#4-refactoring) |
+| Refactoring | Remove all dead code after refactoring | [L3 §4.1.1](../levels/L3_advanced.md#411-dead-code-cleanup) |
 | Code quality | Single responsibility, cyclomatic complexity §15 | [L3 §3.1](../levels/L3_advanced.md#31-control-complexity) |
 | Code quality | No mock data, TODO/FIXME in production | [L1 Rule 11](../levels/L1_minimal.md#11-production-grade-code-cot-required) |
 | Tests | Unit tests for new code, regression tests for bug fixes | [L2 §9](../levels/L2_common.md#9-test-synchronization) |
@@ -74,6 +75,7 @@
 | Performance | Cyclomatic complexity ≤15? No hidden allocations? | [L3 §3.1](../levels/L3_advanced.md#31-control-complexity) |
 | Tests | Coverage adequate? Regression tests for bug fixes? | [L2 §9](../levels/L2_common.md#9-test-synchronization) |
 | Refactoring | Features preserved? Incremental steps? | [L3 §4](../levels/L3_advanced.md#4-refactoring) |
+| Dead code | All unused code removed after refactoring? | [L3 §4.1.1](../levels/L3_advanced.md#411-dead-code-cleanup) |
 
 > **[@CoT-required]**: Before checking items, execute Review Process Step 1 (Rule Localization) to identify which checklist items apply to this review.
 

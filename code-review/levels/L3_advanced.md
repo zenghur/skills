@@ -389,6 +389,30 @@ After refactoring:
 2. Run full test suite
 3. Check edge cases
 
+### 4.1.1 Dead Code Cleanup
+
+> **[@CoT-required]**: After refactoring, scan for and remove ALL dead code. Execute Review Process Step 1-3 before giving conclusions.
+
+**CRITICAL**: Refactoring MUST NOT leave dead code behind. Git preserves history — code is not lost, just removed from active maintenance.
+
+After refactoring passes all tests:
+1. Search for unreachable functions, unused variables, and unreferenced constants
+2. Remove commented-out code blocks
+3. Remove imports that are no longer needed
+4. Verify no references remain (`grep` for removed symbols)
+
+```go
+// ❌ Bad: Dead code left after refactoring
+func processOrderLegacy(order *Order) error {
+    // Old implementation kept "just in case"
+    ...
+}
+
+// ✅ Good: Delete it — git has the history
+```
+
+**Why**: Dead code increases maintenance burden, confuses readers, and rots over time. If you need it back, `git log` will find it.
+
 ### 4.2 Extract Function
 
 ```go
