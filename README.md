@@ -14,13 +14,8 @@ Coding standards and review guidelines for Go backend and Vue 3 + TypeScript fro
 
 ## Claude Code Installation
 
-### Clone and Sync
-
 ```bash
-# Clone to ~/.claude/skills/
 git clone https://github.com/zenghur/skills.git ~/.claude/skills/standards
-
-# Or via submodule in your project
 git submodule add https://github.com/zenghur/skills.git skills
 ```
 
