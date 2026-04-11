@@ -40,7 +40,7 @@ const OrderSummary = ({ items }) => {
 
 ## 2. Frontend: No Business Logic, Pure Calculations OK [@CoT-required]
 
-> **Canonical source**: [L1 Rule 8](../code-review/levels/L1_minimal.md#8-frontend-no-business-logic-pure-calculations-ok-cot-required)
+> **Canonical source**: [Section 1](vue3-typescript.md#1-no-business-logic-pure-calculations-allowed)
 
 Frontend must NOT contain business logic (rules, validation, data transformation).
 Pure data calculations are allowed if data is already provided by backend

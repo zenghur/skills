@@ -8,62 +8,20 @@ Coding standards and review guidelines for Go backend and Vue 3 + TypeScript fro
 |-------|-------------|----------|
 | [go-standards](go-standards/SKILL.md) | Go coding standards | Writing or reviewing Go code |
 | [frontend-standards](frontend-standards/SKILL.md) | Vue 3 + TypeScript standards | Writing or reviewing frontend code |
-| [code-review](code-review/SKILL.md) | Code review process and checklists | Conducting code reviews |
+| [review-standards](review-standards/SKILL.md) | Code review process and checklists | Conducting code reviews |
 | [security-standards](security-standards/SKILL.md) | Security standards | Security audits, auth, XSS/CSRF |
 | [testing-standards](testing-standards/SKILL.md) | Testing standards | Writing tests, coverage requirements |
 
 ## Claude Code Installation
 
-### Option 1: Clone to Local Skills Directory
+### Clone and Sync
 
 ```bash
-# Clone this repo to your Claude Code skills directory
-git clone https://github.com/zenghur/skills.git ~/.claude/skills/my-standards
+# Clone to ~/.claude/skills/
+git clone https://github.com/zenghur/skills.git ~/.claude/skills/standards
 
-# Or symlink
-ln -s /path/to/skills ~/.claude/skills/my-standards
-```
-
-### Option 2: Per-Project Reference
-
-In your project root, add a `CLAUDE.md` that references these skills:
-
-```markdown
-## Skills
-
-Use these skills for this project:
-
-- `/path/to/skills/go-standards` - Go coding standards
-- `/path/to/skills/frontend-standards` - Vue 3 + TypeScript standards
-- `/path/to/skills/code-review` - Code review process
-- `/path/to/skills/security-standards` - Security standards
-- `/path/to/skills/testing-standards` - Testing standards
-```
-
-### Option 3: Invoke via Skill Tool
-
-In Claude Code, use the `Skill` tool to invoke:
-
-```
-/skill go-standards
-/skill frontend-standards
-/skill code-review
-/skill security-standards
-/skill testing-standards
-```
-
-### Option 4: Git Submodule (Recommended for Teams)
-
-```bash
+# Or via submodule in your project
 git submodule add https://github.com/zenghur/skills.git skills
-```
-
-Then reference in project `CLAUDE.md`:
-
-```markdown
-## Local Skills
-
-Our coding standards: ./skills/go-standards/SKILL.md
 ```
 
 ## Quick Start
@@ -71,19 +29,19 @@ Our coding standards: ./skills/go-standards/SKILL.md
 ### Writing Go Code
 
 ```
-code-review + go-standards
+review-standards + go-standards
 ```
 
 ### Writing Vue/TypeScript Code
 
 ```
-code-review + frontend-standards
+review-standards + frontend-standards
 ```
 
 ### Full Stack Code Review
 
 ```
-code-review + go-standards + frontend-standards + security-standards
+review-standards + go-standards + frontend-standards + security-standards
 ```
 
 ## go-standards
@@ -105,7 +63,7 @@ Vue 3 + TypeScript standards:
 - Vue 3 Composition API with `<script setup>`
 - TypeScript strict mode, no `any`
 
-## code-review
+## review-standards
 
 Three-phase review protocol:
 
@@ -145,7 +103,6 @@ Modules:
 ## Development Commands
 
 ```bash
-# Go linting
 go vet ./...
 golangci-lint run ./...
 gofmt -w .

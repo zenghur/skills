@@ -1,9 +1,9 @@
 ---
-name: code-review
+name: review-standards
 description: Code review process skill defining the three-phase review protocol (Full Blind Scan → Structured Grouping → Rule-Anchored Analysis). Use for all code review scenarios.
 ---
 
-# Code Review
+# Review Standards
 
 ## Overview
 
@@ -82,18 +82,18 @@ Recommendation: [If applicable, must derive naturally from Step 2 findings]
 
 | Scenario | Skills to Combine |
 |----------|------------------|
-| Go code review | code-review + go-standards |
-| Frontend code review | code-review + frontend-standards |
-| Full stack review | code-review + go-standards + frontend-standards |
-| Security audit | code-review + security-standards |
-| Test coverage review | code-review + testing-standards |
+| Go code review | review-standards + go-standards |
+| Frontend code review | review-standards + frontend-standards |
+| Full stack review | review-standards + go-standards + frontend-standards |
+| Security audit | review-standards + security-standards |
+| Test coverage review | review-standards + testing-standards |
 
 ---
 
 ## File Structure
 
 ```
-code-review/
+review-standards/
 ├── SKILL.md          # Main entry + review flow
 ├── checklists.md     # Review checklists
 └── CLAUDE.md        # Claude Code project guidance
