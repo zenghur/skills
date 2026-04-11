@@ -23,6 +23,10 @@ Systematic code review process with three-phase protocol for rigorous, unbiased 
 4. **No reverse questioning**: Do not ask the user "could you confirm...", "is this redundant...", "does this depend on...". Your job is to give conclusions, not ask humans for conclusions.
 5. **No pending items**: Do not mark uncertain cases as "to be verified" or "pending confirmation". Resolve through code analysis.
 
+### Documentation Sync Rule
+
+If documentation contradicts code, the code is always right. Update the documentation to match.
+
 ---
 
 ## Review Operation Flow (Mandatory)
