@@ -12,6 +12,60 @@ Coding standards and review guidelines for Go backend and Vue 3 + TypeScript fro
 | [security-standards](security-standards/SKILL.md) | Security standards | Security audits, auth, XSS/CSRF |
 | [testing-standards](testing-standards/SKILL.md) | Testing standards | Writing tests, coverage requirements |
 
+## Claude Code Installation
+
+### Option 1: Clone to Local Skills Directory
+
+```bash
+# Clone this repo to your Claude Code skills directory
+git clone https://github.com/zenghur/skills.git ~/.claude/skills/my-standards
+
+# Or symlink
+ln -s /path/to/skills ~/.claude/skills/my-standards
+```
+
+### Option 2: Per-Project Reference
+
+In your project root, add a `CLAUDE.md` that references these skills:
+
+```markdown
+## Skills
+
+Use these skills for this project:
+
+- `/path/to/skills/go-standards` - Go coding standards
+- `/path/to/skills/frontend-standards` - Vue 3 + TypeScript standards
+- `/path/to/skills/code-review` - Code review process
+- `/path/to/skills/security-standards` - Security standards
+- `/path/to/skills/testing-standards` - Testing standards
+```
+
+### Option 3: Invoke via Skill Tool
+
+In Claude Code, use the `Skill` tool to invoke:
+
+```
+/skill go-standards
+/skill frontend-standards
+/skill code-review
+/skill security-standards
+/skill testing-standards
+```
+
+### Option 4: Git Submodule (Recommended for Teams)
+
+```bash
+git submodule add https://github.com/zenghur/skills.git skills
+```
+
+Then reference in project `CLAUDE.md`:
+
+```markdown
+## Local Skills
+
+Our coding standards: ./skills/go-standards/SKILL.md
+```
+
 ## Quick Start
 
 ### Writing Go Code
