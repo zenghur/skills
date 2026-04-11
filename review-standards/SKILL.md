@@ -27,6 +27,10 @@ Systematic code review process with three-phase protocol for rigorous, unbiased 
 
 If documentation contradicts code, the code is always right. Update the documentation to match.
 
+### Project Cleanliness Rule
+
+If unrelated files, build artifacts, test outputs, or other cruft exist in the project, delete them. A clean project is a healthy project.
+
 ---
 
 ## Review Operation Flow (Mandatory)
