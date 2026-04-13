@@ -18,6 +18,7 @@ Go coding standards organized into focused modules for precision and maintainabi
 | [Concurrency](concurrency.md) | SafeGo, channels, goroutine leak prevention |
 | [Database](database.md) | GORM explicit column tags, NOT NULL constraints |
 | [Function Design](function-design.md) | Complexity ≤15, single responsibility |
+| [JSON Marshaling](json-marshaling.md) | No string concat, use struct marshal |
 
 ## Core Principles (Summary)
 
@@ -30,6 +31,7 @@ Go coding standards organized into focused modules for precision and maintainabi
 | GORM explicit column tags | [Database](database.md#1-field-tags) |
 | Cyclomatic complexity ≤15 | [Function Design](function-design.md#1-control-complexity) |
 | No mock data, TODO/FIXME | [Function Design](function-design.md#10-production-grade-code-cot-required) |
+| Struct marshal JSON | [JSON Marshaling](json-marshaling.md#1-禁止字符串拼接-json) |
 
 ## File Structure
 
@@ -40,7 +42,8 @@ go-standards/
 ├── error-handling.md     # Error handling patterns
 ├── concurrency.md        # Concurrency safety
 ├── database.md           # GORM and database standards
-└── function-design.md   # Function design principles
+├── function-design.md    # Function design principles
+└── json-marshaling.md    # JSON serialization standards
 ```
 
 ## Development Commands
