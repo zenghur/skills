@@ -1,0 +1,55 @@
+{
+  "plugins": [
+    {
+      "name": "go-standards",
+      "description": "Go coding standards skill",
+      "source": {
+        "source": "directory",
+        "path": "go-standards"
+      }
+    },
+    {
+      "name": "frontend-standards",
+      "description": "Vue 3 + TypeScript frontend standards skill",
+      "source": {
+        "source": "directory",
+        "path": "frontend-standards"
+      }
+    },
+    {
+      "name": "review-standards",
+      "description": "Code review process and three-phase review protocol",
+      "source": {
+        "source": "directory",
+        "path": "review-standards"
+      }
+    },
+    {
+      "name": "security-standards",
+      "description": "Security standards covering defense in depth, XSS, CSRF, TLS",
+      "source": {
+        "source": "directory",
+        "path": "security-standards"
+      }
+    },
+    {
+      "name": "testing-standards",
+      "description": "Testing standards with coverage requirements and test patterns",
+      "source": {
+        "source": "directory",
+        "path": "testing-standards"
+      }
+    },
+    {
+      "name": "verifier",
+      "description": "Code verification skill for validating standards compliance",
+      "source": {
+        "source": "directory",
+        "path": "verifier"
+      }
+    }
+  ],
+  "owner": {
+    "name": "zenghongru"
+  }
+}
