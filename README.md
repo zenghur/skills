@@ -14,8 +14,40 @@ Coding standards and review guidelines for Go backend and Vue 3 + TypeScript fro
 
 ## Claude Code Installation
 
+### Method 1: GitHub Marketplace（推荐）
+
+在 `~/.claude/settings.json` 中添加：
+
+```json
+{
+  "extraKnownMarketplaces": {
+    "zenghur-skills": {
+      "source": {
+        "source": "github",
+        "repo": "zenghur/skills",
+        "path": ".claude-plugin"
+      },
+      "autoUpdate": true
+    }
+  },
+  "enabledPlugins": {
+    "go-standards@zenghur-skills": true,
+    "frontend-standards@zenghur-skills": true,
+    "review-standards@zenghur-skills": true,
+    "security-standards@zenghur-skills": true,
+    "testing-standards@zenghur-skills": true,
+    "verifier@zenghur-skills": true
+  }
+}
+```
+
+重启 Claude Code 即可自动安装。
+
+### Method 2: Local Sync
+
 ```bash
-sync-skills.sh
+git clone git@github.com:zenghur/skills.git ~/.claude/skills
+cd ~/.claude/skills && ./sync-skills.sh
 ```
 
 ## Quick Start
