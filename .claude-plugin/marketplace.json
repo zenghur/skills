@@ -5,7 +5,7 @@
       "description": "Go coding standards skill",
       "source": {
         "source": "directory",
-        "path": "go-standards"
+        "path": "../go-standards"
       }
     },
     {
@@ -13,7 +13,7 @@
       "description": "Vue 3 + TypeScript frontend standards skill",
       "source": {
         "source": "directory",
-        "path": "frontend-standards"
+        "path": "../frontend-standards"
       }
     },
     {
@@ -21,7 +21,7 @@
       "description": "Code review process and three-phase review protocol",
       "source": {
         "source": "directory",
-        "path": "review-standards"
+        "path": "../review-standards"
       }
     },
     {
@@ -29,7 +29,7 @@
       "description": "Security standards covering defense in depth, XSS, CSRF, TLS",
       "source": {
         "source": "directory",
-        "path": "security-standards"
+        "path": "../security-standards"
       }
     },
     {
@@ -37,7 +37,7 @@
       "description": "Testing standards with coverage requirements and test patterns",
       "source": {
         "source": "directory",
-        "path": "testing-standards"
+        "path": "../testing-standards"
       }
     },
     {
@@ -45,7 +45,7 @@
       "description": "Code verification skill for validating standards compliance",
       "source": {
         "source": "directory",
-        "path": "verifier"
+        "path": "../verifier"
       }
     }
   ],
