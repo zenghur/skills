@@ -1,55 +1,40 @@
 {
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "zenghur-skills",
+  "description": "Personal skills for Go standards, frontend standards, code review, security, testing, and verification",
+  "owner": {
+    "name": "zenghongru"
+  },
   "plugins": [
     {
       "name": "go-standards",
       "description": "Go coding standards skill",
-      "source": {
-        "source": "directory",
-        "path": "../go-standards"
-      }
+      "source": "./go-standards"
     },
     {
       "name": "frontend-standards",
       "description": "Vue 3 + TypeScript frontend standards skill",
-      "source": {
-        "source": "directory",
-        "path": "../frontend-standards"
-      }
+      "source": "./frontend-standards"
     },
     {
       "name": "review-standards",
       "description": "Code review process and three-phase review protocol",
-      "source": {
-        "source": "directory",
-        "path": "../review-standards"
-      }
+      "source": "./review-standards"
     },
     {
       "name": "security-standards",
       "description": "Security standards covering defense in depth, XSS, CSRF, TLS",
-      "source": {
-        "source": "directory",
-        "path": "../security-standards"
-      }
+      "source": "./security-standards"
     },
     {
       "name": "testing-standards",
       "description": "Testing standards with coverage requirements and test patterns",
-      "source": {
-        "source": "directory",
-        "path": "../testing-standards"
-      }
+      "source": "./testing-standards"
     },
     {
       "name": "verifier",
       "description": "Code verification skill for validating standards compliance",
-      "source": {
-        "source": "directory",
-        "path": "../verifier"
-      }
+      "source": "./verifier"
     }
-  ],
-  "owner": {
-    "name": "zenghongru"
-  }
+  ]
 }
